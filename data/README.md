@@ -1,6 +1,6 @@
 # Data Management Directory
 
-This directory contains the dataset storage and management architecture for the **India Global Progress** platform. It provides a structured pipeline for ingesting, processing, and maintaining multi-country indicators from trusted international organizations.
+This directory contains the dataset storage and management architecture for the **IndiaLens AI** platform. It provides a structured pipeline for ingesting, processing, and maintaining multi-country indicators from trusted international organizations.
 
 ---
 

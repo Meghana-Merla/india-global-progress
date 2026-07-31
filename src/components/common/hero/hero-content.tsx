@@ -12,9 +12,9 @@ export interface HeroContentProps {
 }
 
 export function HeroContent({
-  badgeText = "INDIA GLOBAL PROGRESS PLATFORM",
+  badgeText = "INDIALENS AI PLATFORM",
   title = "India in the World",
-  subtitle = "Explore India's global standing across trusted international indicators covering economy, governance, technology, healthcare, education, sustainability, safety, equality and more.",
+  subtitle = "AI-powered Global Intelligence Dashboard for India's International Rankings across trusted global indicators covering economy, governance, technology, healthcare, education, sustainability, safety, equality and more.",
 }: HeroContentProps) {
   return (
     <div className="flex flex-col items-center text-center max-w-4xl mx-auto">

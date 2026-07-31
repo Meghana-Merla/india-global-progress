@@ -19,7 +19,7 @@ export interface NavItem {
 }
 
 export const navigationItems: NavItem[] = [
-  { title: "Dashboard", href: "/", icon: LayoutDashboard },
+  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Categories", href: "#categories", icon: Layers },
   { title: "Compare", href: "#compare", icon: GitCompare },
   { title: "World Map", href: "#map", icon: Globe },

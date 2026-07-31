@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "India Global Progress",
-  description: "Production-grade platform tracking India's global growth, metrics, and progress",
+  title: "IndiaLens AI | Global Intelligence Dashboard",
+  description: "AI-powered Global Intelligence Dashboard for India's International Rankings",
 };
 
 export default function RootLayout({

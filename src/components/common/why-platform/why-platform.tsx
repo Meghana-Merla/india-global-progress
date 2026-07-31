@@ -21,8 +21,8 @@ export function WhyPlatform({
       {/* Section Header */}
       <SectionHeading
         badge="THE PURPOSE"
-        title="Why India Global Progress?"
-        description="Global rankings are scattered across hundreds of reports published by trusted international organizations. This platform brings them together into one interactive experience to help everyone understand India's position in the world."
+        title="Why IndiaLens AI?"
+        description="Global rankings are scattered across hundreds of reports published by trusted international organizations. IndiaLens AI brings them together into one interactive experience to help everyone understand India's position in the world."
         align="left"
       />
 

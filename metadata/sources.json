@@ -1,0 +1,322 @@
+{
+  "sources": [
+    {
+      "id": "world-bank",
+      "name": "World Bank Open Data",
+      "organization": "World Bank",
+      "officialWebsite": "https://data.worldbank.org",
+      "official_website": "https://data.worldbank.org",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / JSON / API",
+      "expected_file_format": "CSV / JSON / API",
+      "supportedIndicators": [
+        "GDP",
+        "GDP Growth",
+        "R&D Expenditure (% of GDP)",
+        "High-Technology Exports"
+      ],
+      "supported_indicators": [
+        "GDP",
+        "GDP Growth",
+        "R&D Expenditure (% of GDP)",
+        "High-Technology Exports"
+      ],
+      "license": "Creative Commons Attribution 4.0 (CC-BY 4.0)",
+      "lastUpdated": null
+    },
+    {
+      "id": "imf",
+      "name": "IMF World Economic Outlook Data",
+      "organization": "International Monetary Fund (IMF)",
+      "officialWebsite": "https://www.imf.org/en/Data",
+      "official_website": "https://www.imf.org/en/Data",
+      "updateFrequency": "Bi-Annual",
+      "update_frequency": "Bi-Annual",
+      "expectedFileFormat": "CSV / SDMX",
+      "expected_file_format": "CSV / SDMX",
+      "supportedIndicators": [
+        "Real GDP Growth",
+        "Inflation Rate",
+        "Government Debt to GDP Ratio"
+      ],
+      "supported_indicators": [
+        "Real GDP Growth",
+        "Inflation Rate",
+        "Government Debt to GDP Ratio"
+      ],
+      "license": "IMF Copyright & Usage Terms",
+      "lastUpdated": null
+    },
+    {
+      "id": "un",
+      "name": "UN Data Portal",
+      "organization": "United Nations",
+      "officialWebsite": "https://data.un.org",
+      "official_website": "https://data.un.org",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / XML / JSON",
+      "expected_file_format": "CSV / XML / JSON",
+      "supportedIndicators": [
+        "Population Statistics",
+        "SDG Progress Indicators",
+        "Urbanization Rates"
+      ],
+      "supported_indicators": [
+        "Population Statistics",
+        "SDG Progress Indicators",
+        "Urbanization Rates"
+      ],
+      "license": "Open Data / Public Domain",
+      "lastUpdated": null
+    },
+    {
+      "id": "undp",
+      "name": "UNDP Human Development Data Center",
+      "organization": "United Nations Development Programme (UNDP)",
+      "officialWebsite": "https://hdr.undp.org/data-center",
+      "official_website": "https://hdr.undp.org/data-center",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / XLSX",
+      "expected_file_format": "CSV / XLSX",
+      "supportedIndicators": [
+        "Human Development Index (HDI)",
+        "Gender Inequality Index (GII)",
+        "Multidimensional Poverty Index"
+      ],
+      "supported_indicators": [
+        "Human Development Index (HDI)",
+        "Gender Inequality Index (GII)",
+        "Multidimensional Poverty Index"
+      ],
+      "license": "CC-BY 3.0 IGO",
+      "lastUpdated": null
+    },
+    {
+      "id": "who",
+      "name": "WHO Global Health Observatory",
+      "organization": "World Health Organization (WHO)",
+      "officialWebsite": "https://www.who.int/data/gho",
+      "official_website": "https://www.who.int/data/gho",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / JSON",
+      "expected_file_format": "CSV / JSON",
+      "supportedIndicators": [
+        "Life Expectancy at Birth",
+        "Universal Health Coverage Index",
+        "Healthcare Expenditure"
+      ],
+      "supported_indicators": [
+        "Life Expectancy at Birth",
+        "Universal Health Coverage Index",
+        "Healthcare Expenditure"
+      ],
+      "license": "CC-BY-NC-SA 3.0 IGO",
+      "lastUpdated": null
+    },
+    {
+      "id": "unesco",
+      "name": "UNESCO Institute for Statistics Data",
+      "organization": "UNESCO",
+      "officialWebsite": "https://uis.unesco.org",
+      "official_website": "https://uis.unesco.org",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / XLSX",
+      "expected_file_format": "CSV / XLSX",
+      "supportedIndicators": [
+        "Literacy Rate",
+        "Gross Enrollment Ratio in Higher Education",
+        "R&D Researchers per Million"
+      ],
+      "supported_indicators": [
+        "Literacy Rate",
+        "Gross Enrollment Ratio in Higher Education",
+        "R&D Researchers per Million"
+      ],
+      "license": "CC-BY-SA 3.0 IGO",
+      "lastUpdated": null
+    },
+    {
+      "id": "oecd",
+      "name": "OECD Data Explorer",
+      "organization": "Organisation for Economic Co-operation and Development (OECD)",
+      "officialWebsite": "https://data.oecd.org",
+      "official_website": "https://data.oecd.org",
+      "updateFrequency": "Quarterly / Annual",
+      "update_frequency": "Quarterly / Annual",
+      "expectedFileFormat": "CSV / SDMX-JSON",
+      "expected_file_format": "CSV / SDMX-JSON",
+      "supportedIndicators": [
+        "PISA Educational Assessment Scores",
+        "Labour Productivity",
+        "FDI Flows"
+      ],
+      "supported_indicators": [
+        "PISA Educational Assessment Scores",
+        "Labour Productivity",
+        "FDI Flows"
+      ],
+      "license": "OECD Terms and Conditions",
+      "lastUpdated": null
+    },
+    {
+      "id": "wef",
+      "name": "WEF Global Competitiveness & Gender Gap Data",
+      "organization": "World Economic Forum (WEF)",
+      "officialWebsite": "https://www.weforum.org/reports",
+      "official_website": "https://www.weforum.org/reports",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "PDF / XLSX / CSV",
+      "expected_file_format": "PDF / XLSX / CSV",
+      "supportedIndicators": [
+        "Global Competitiveness Index",
+        "Global Gender Gap Index",
+        "Network Readiness Index"
+      ],
+      "supported_indicators": [
+        "Global Competitiveness Index",
+        "Global Gender Gap Index",
+        "Network Readiness Index"
+      ],
+      "license": "WEF Terms of Use",
+      "lastUpdated": null
+    },
+    {
+      "id": "wipo",
+      "name": "WIPO Global Innovation Index",
+      "organization": "World Intellectual Property Organization (WIPO)",
+      "officialWebsite": "https://www.wipo.int/global_innovation_index",
+      "official_website": "https://www.wipo.int/global_innovation_index",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "XLSX / CSV",
+      "expected_file_format": "XLSX / CSV",
+      "supportedIndicators": [
+        "Global Innovation Index (GII)",
+        "Patent Applications by Origin",
+        "Trademark & Design Filings"
+      ],
+      "supported_indicators": [
+        "Global Innovation Index (GII)",
+        "Patent Applications by Origin",
+        "Trademark & Design Filings"
+      ],
+      "license": "CC-BY 4.0 IGO",
+      "lastUpdated": null
+    },
+    {
+      "id": "oxford-insights",
+      "name": "Government AI Readiness Index",
+      "organization": "Oxford Insights",
+      "officialWebsite": "https://www.oxfordinsights.com",
+      "official_website": "https://www.oxfordinsights.com",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / XLSX",
+      "expected_file_format": "CSV / XLSX",
+      "supportedIndicators": [
+        "Government AI Readiness Index",
+        "Governance Score",
+        "Infrastructure Score"
+      ],
+      "supported_indicators": [
+        "Government AI Readiness Index",
+        "Governance Score",
+        "Infrastructure Score"
+      ],
+      "license": "Open Access with Attribution",
+      "lastUpdated": null
+    },
+    {
+      "id": "transparency-international",
+      "name": "Corruption Perceptions Index",
+      "organization": "Transparency International",
+      "officialWebsite": "https://www.transparency.org",
+      "official_website": "https://www.transparency.org",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / XLSX",
+      "expected_file_format": "CSV / XLSX",
+      "supportedIndicators": [
+        "Corruption Perceptions Index (CPI) Score",
+        "CPI Rank"
+      ],
+      "supported_indicators": [
+        "Corruption Perceptions Index (CPI) Score",
+        "CPI Rank"
+      ],
+      "license": "CC-BY-ND 4.0",
+      "lastUpdated": null
+    },
+    {
+      "id": "our-world-in-data",
+      "name": "Our World in Data Public Datasets",
+      "organization": "Our World in Data",
+      "officialWebsite": "https://ourworldindata.org",
+      "official_website": "https://ourworldindata.org",
+      "updateFrequency": "Continuous / Daily",
+      "update_frequency": "Continuous / Daily",
+      "expectedFileFormat": "CSV / JSON",
+      "expected_file_format": "CSV / JSON",
+      "supportedIndicators": [
+        "Renewable Energy Share",
+        "CO2 Emissions per Capita",
+        "Internet Usage"
+      ],
+      "supported_indicators": [
+        "Renewable Energy Share",
+        "CO2 Emissions per Capita",
+        "Internet Usage"
+      ],
+      "license": "CC-BY 4.0",
+      "lastUpdated": null
+    },
+    {
+      "id": "iqair",
+      "name": "World Air Quality Index Data",
+      "organization": "IQAir",
+      "officialWebsite": "https://www.iqair.com",
+      "official_website": "https://www.iqair.com",
+      "updateFrequency": "Annual / Real-time",
+      "update_frequency": "Annual / Real-time",
+      "expectedFileFormat": "CSV / JSON",
+      "expected_file_format": "CSV / JSON",
+      "supportedIndicators": [
+        "PM2.5 Concentration",
+        "City Air Quality Index (AQI)"
+      ],
+      "supported_indicators": [
+        "PM2.5 Concentration",
+        "City Air Quality Index (AQI)"
+      ],
+      "license": "Free Non-Commercial Use",
+      "lastUpdated": null
+    },
+    {
+      "id": "startupblink",
+      "name": "Global Startup Ecosystem Index",
+      "organization": "StartupBlink",
+      "officialWebsite": "https://www.startupblink.com",
+      "official_website": "https://www.startupblink.com",
+      "updateFrequency": "Annual",
+      "update_frequency": "Annual",
+      "expectedFileFormat": "CSV / JSON",
+      "expected_file_format": "CSV / JSON",
+      "supportedIndicators": [
+        "Startup Ecosystem Rank",
+        "Ecosystem Score"
+      ],
+      "supported_indicators": [
+        "Startup Ecosystem Rank",
+        "Ecosystem Score"
+      ],
+      "license": "Free Access with Attribution",
+      "lastUpdated": null
+    }
+  ]
+}

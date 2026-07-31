@@ -1,10 +1,11 @@
 import { AppShell, PageContainer } from "@/components/layouts";
+import { Hero } from "@/components/common/hero";
 
 export default function Home() {
   return (
     <AppShell>
       <PageContainer>
-        {/* Placeholder container - no visible dashboard UI built yet per Task 3 instructions */}
+        <Hero />
       </PageContainer>
     </AppShell>
   );

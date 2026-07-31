@@ -3,6 +3,7 @@ import { Hero } from "@/components/common/hero";
 import { OverviewSection } from "@/components/common/dashboard-preview";
 import { WhyPlatform } from "@/components/common/why-platform";
 import { CategoriesPreview } from "@/components/common/categories-preview";
+import { AIPreview } from "@/components/common/ai-preview";
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
         <OverviewSection />
         <WhyPlatform />
         <CategoriesPreview />
+        <AIPreview />
       </PageContainer>
     </AppShell>
   );

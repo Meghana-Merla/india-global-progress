@@ -1,4 +1,5 @@
 import React from "react";
+import { Navbar } from "@/components/common/navbar";
 import { cn } from "@/lib/utils";
 
 export interface AppShellProps {
@@ -19,11 +20,9 @@ export function AppShell({
       {/* Background Ambient Mesh */}
       <div className="fixed inset-0 pointer-events-none bg-gradient-mesh z-0" />
 
-      {/* Sticky Header Container (Empty Spacing Placeholder) */}
+      {/* Sticky Header Container */}
       <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md transition-all duration-300">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 h-16 md:h-20 flex items-center justify-between">
-          {headerContent ? headerContent : <div className="w-full h-full" />}
-        </div>
+        {headerContent ? headerContent : <Navbar />}
       </header>
 
       {/* Main Content Area */}

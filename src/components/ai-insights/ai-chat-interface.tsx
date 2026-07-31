@@ -59,20 +59,59 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
     setIsTyping(true);
 
     try {
-      // Fetch response from AI service for current year
-      const responseText = await fetchAIResponseByYear(selectedYear, text);
+      const res = await fetch("/api/ai/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          question: text,
+          selectedYear,
+          selectedCountry: "India",
+          pageContext: "ai-insights",
+        }),
+      });
+
+      if (!res.ok) {
+        throw new Error(`Server returned HTTP ${res.status}`);
+      }
+
+      const resData = await res.json();
+      
+      let formattedContent = resData.summary || "No summary response generated.";
+
+      if (resData.strengths && resData.strengths.length > 0) {
+        formattedContent += "\n\n### **Key Strengths**\n" + resData.strengths.map((s: string) => `- ${s}`).join("\n");
+      }
+      if (resData.weaknesses && resData.weaknesses.length > 0) {
+        formattedContent += "\n\n### **Areas of Concern**\n" + resData.weaknesses.map((w: string) => `- ${w}`).join("\n");
+      }
+      if (resData.recommendations && resData.recommendations.length > 0) {
+        formattedContent += "\n\n### **Strategic Recommendations**\n" + resData.recommendations.map((r: string) => `- ${r}`).join("\n");
+      }
+      if (resData.keyTakeaways && resData.keyTakeaways.length > 0) {
+        formattedContent += "\n\n> " + resData.keyTakeaways.join(" • ");
+      }
 
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: responseText,
+        content: formattedContent,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        sources: [`WIPO GII ${selectedYear}`, "World Bank LPI", "UNDP HDI Report"],
+        sources: ["Gemini 2.5 Flash Engine", `WIPO GII ${selectedYear}`, "World Bank LPI"],
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
     } catch (err) {
-      console.error("AI chat error:", err);
+      console.error("AI chat API error:", err);
+      // Fallback response with friendly retry message
+      const fallbackText = await fetchAIResponseByYear(selectedYear, text);
+      const assistantMsg: ChatMessage = {
+        id: `assistant-${Date.now()}`,
+        role: "assistant",
+        content: `${fallbackText}\n\n*(Notice: Live Gemini API connection encountered a transient rate limit/timeout. Displaying offline intelligence cached for ${selectedYear}.)*`,
+        timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
+        sources: [`IndiaLens Offline Intelligence (${selectedYear})`],
+      };
+      setMessages((prev) => [...prev, assistantMsg]);
     } finally {
       setIsTyping(false);
     }

@@ -1,0 +1,244 @@
+// Prisma Schema for India Global Progress Platform
+// Database Provider: PostgreSQL
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// -----------------------------------------------------------------------------
+// Enums
+// -----------------------------------------------------------------------------
+
+enum IndicatorValueType {
+  RANK
+  SCORE
+  PERCENTAGE
+  CURRENCY
+  INDEX
+  NUMBER
+}
+
+enum RankingDirection {
+  HIGHER_IS_BETTER
+  LOWER_IS_BETTER
+}
+
+enum Frequency {
+  ANNUAL
+  MONTHLY
+  QUARTERLY
+}
+
+enum ValueStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum InsightType {
+  SUMMARY
+  COMPARISON
+  TREND
+  RECOMMENDATION
+}
+
+enum NewsSentiment {
+  POSITIVE
+  NEUTRAL
+  NEGATIVE
+}
+
+// -----------------------------------------------------------------------------
+// Models
+// -----------------------------------------------------------------------------
+
+/// 1. Country Model - Global economies benchmarked on the platform
+model Country {
+  id                 String              @id @default(uuid())
+  name               String
+  code               String              @unique
+  iso2Code           String?
+  flagUrl            String?
+  region             String?
+  incomeGroup        String?
+  isTarget           Boolean             @default(false)
+  indicatorValues    IndicatorValue[]
+  historicalRankings HistoricalRanking[]
+  aiInsights         AIInsight[]
+  newsReferences     NewsReference[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@index([code])
+  @@index([region])
+  @@index([isTarget])
+}
+
+/// 2. Category Model - High-level grouping of indicators (e.g. Economy, Society, Governance)
+model Category {
+  id             String          @id @default(uuid())
+  name           String          @unique
+  slug           String          @unique
+  description    String?
+  iconName       String?
+  gradient       String?
+  indicators     Indicator[]
+  aiInsights     AIInsight[]
+  newsReferences NewsReference[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@index([slug])
+}
+
+/// 3. DataSource Model - Recognized international organizations (e.g. World Bank, IMF, UN)
+model DataSource {
+  id               String      @id @default(uuid())
+  name             String      @unique
+  shortName        String?
+  organizationUrl  String?
+  description      String?
+  logoUrl          String?
+  reliabilityScore Float?      @default(1.0)
+  indicators       Indicator[]
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+
+  @@index([name])
+}
+
+/// 4. Indicator Model - Individual global metrics, indexes, or rankings
+model Indicator {
+  id                 String              @id @default(uuid())
+  name               String
+  code               String              @unique
+  slug               String              @unique
+  description        String?
+  unit               String?
+  valueType          IndicatorValueType  @default(SCORE)
+  rankingDirection   RankingDirection    @default(HIGHER_IS_BETTER)
+  frequency          Frequency           @default(ANNUAL)
+  minPossibleValue   Float?
+  maxPossibleValue   Float?
+  categoryId         String
+  category           Category            @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  dataSourceId       String
+  dataSource         DataSource          @relation(fields: [dataSourceId], references: [id], onDelete: Restrict)
+  values             IndicatorValue[]
+  historicalRankings HistoricalRanking[]
+  aiInsights         AIInsight[]
+  newsReferences     NewsReference[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@index([categoryId])
+  @@index([dataSourceId])
+  @@index([code])
+  @@index([slug])
+}
+
+/// 5. IndicatorValue Model - Time-series observation for a country on an indicator
+model IndicatorValue {
+  id                  String              @id @default(uuid())
+  year                Int
+  period              String?
+  scoreValue          Float?
+  rankValue           Int?
+  totalCountriesCount Int?
+  percentile          Float?
+  status              ValueStatus         @default(PUBLISHED)
+  notes               String?
+  countryId           String
+  country             Country             @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  indicatorId         String
+  indicator           Indicator           @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+  historicalRankings  HistoricalRanking[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+
+  @@unique([countryId, indicatorId, year])
+  @@index([countryId])
+  @@index([indicatorId])
+  @@index([year])
+  @@index([countryId, year])
+}
+
+/// 6. HistoricalRanking Model - Multi-year historical snapshot for trend analysis
+model HistoricalRanking {
+  id               String         @id @default(uuid())
+  year             Int
+  rank             Int
+  score            Float?
+  totalCountries   Int?
+  rankChange       Int?
+  indicatorValueId String
+  indicatorValue   IndicatorValue @relation(fields: [indicatorValueId], references: [id], onDelete: Cascade)
+  countryId        String
+  country          Country        @relation(fields: [countryId], references: [id], onDelete: Cascade)
+  indicatorId      String
+  indicator        Indicator      @relation(fields: [indicatorId], references: [id], onDelete: Cascade)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  @@unique([indicatorValueId, year])
+  @@index([indicatorValueId])
+  @@index([countryId, indicatorId])
+  @@index([year])
+}
+
+/// 7. AIInsight Model - Generated intelligent summaries, comparisons, and policy advice
+model AIInsight {
+  id                   String      @id @default(uuid())
+  title                String
+  type                 InsightType
+  content              String      @db.Text
+  summary              String?
+  confidenceScore      Float?
+  llmModel             String?
+  promptQuery          String?
+  secondaryCountryCode String?
+  isFeatured           Boolean     @default(false)
+  countryId            String?
+  country              Country?    @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  indicatorId          String?
+  indicator            Indicator?  @relation(fields: [indicatorId], references: [id], onDelete: SetNull)
+  categoryId           String?
+  category             Category?   @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt            DateTime    @default(now())
+  updatedAt            DateTime    @updatedAt
+
+  @@index([type])
+  @@index([countryId])
+  @@index([indicatorId])
+  @@index([categoryId])
+  @@index([isFeatured])
+}
+
+/// 8. NewsReference Model - External news and media coverage linked to indicators and progress
+model NewsReference {
+  id             String         @id @default(uuid())
+  title          String
+  summary        String?
+  url            String
+  publisher      String
+  publishedAt    DateTime
+  sentiment      NewsSentiment? @default(NEUTRAL)
+  relevanceScore Float?         @default(1.0)
+  countryId      String?
+  country        Country?       @relation(fields: [countryId], references: [id], onDelete: SetNull)
+  indicatorId    String?
+  indicator      Indicator?     @relation(fields: [indicatorId], references: [id], onDelete: SetNull)
+  categoryId     String?
+  category       Category?      @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  @@index([publishedAt])
+  @@index([countryId])
+  @@index([indicatorId])
+  @@index([categoryId])
+}

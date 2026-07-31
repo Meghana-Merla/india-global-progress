@@ -97,12 +97,18 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
 
       {/* Right Section: Action Icons */}
       <div className="flex items-center gap-2">
-        {/* Search Icon Button */}
+        {/* Command Palette Trigger Button */}
         <button
-          className="p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none"
-          aria-label="Search"
+          onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
+          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/60 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all text-xs font-medium cursor-pointer"
+          aria-label="Open Command Palette (Ctrl+K)"
+          title="Open Command Palette (Ctrl+K)"
         >
-          <Search className="w-4 h-4" />
+          <Search className="w-3.5 h-3.5 text-primary" />
+          <span className="hidden sm:inline">Search...</span>
+          <kbd className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-background border border-border/80 text-muted-foreground shadow-xs">
+            ⌘K
+          </kbd>
         </button>
 
         {/* Theme Toggle Button */}

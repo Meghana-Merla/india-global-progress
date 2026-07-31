@@ -1,5 +1,6 @@
 import React from "react";
 import { Navbar } from "@/components/common/navbar";
+import { CommandPalette } from "@/components/common/command-palette";
 import { cn } from "@/lib/utils";
 
 export interface AppShellProps {
@@ -47,6 +48,9 @@ export function AppShell({
           )}
         </div>
       </footer>
+
+      {/* Global AI Command Palette Modal */}
+      <CommandPalette />
     </div>
   );
 }

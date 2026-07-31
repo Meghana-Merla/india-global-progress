@@ -3,6 +3,7 @@
 import React from "react";
 import { ThemeProvider } from "./theme-provider";
 import { QueryProvider } from "./query-provider";
+import { YearProvider } from "./year-provider";
 
 export function AppProviders({ children }: { children: React.ReactNode }) {
   return (
@@ -12,7 +13,11 @@ export function AppProviders({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <QueryProvider>{children}</QueryProvider>
+      <QueryProvider>
+        <YearProvider>{children}</YearProvider>
+      </QueryProvider>
     </ThemeProvider>
   );
 }
+
+export * from "./year-provider";

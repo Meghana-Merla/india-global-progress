@@ -2,14 +2,14 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import { KPICardData } from "./dashboard-data";
+import { KPICardData } from "@/data/mock";
 import { KPICard } from "./kpi-card";
 
 export interface KPIGridProps {
-  cards: KPICardData[];
+  cards?: KPICardData[];
 }
 
-export function KPIGrid({ cards }: KPIGridProps) {
+export function KPIGrid({ cards = [] }: KPIGridProps) {
   return (
     <motion.div
       initial="initial"

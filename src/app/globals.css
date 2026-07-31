@@ -136,18 +136,18 @@
 }
 
 .dark {
-  /* Sleek Dark Mode (Apple / Linear / Vercel dark theme) */
+  /* Sleek Dark Mode (Bloomberg / Linear / Vercel dark theme) */
   --background: #0B0F17;
   --foreground: #F8FAFC;
 
-  --card: #121824;
+  --card: #0F172A;
   --card-foreground: #F8FAFC;
 
-  --popover: #121824;
+  --popover: #0F172A;
   --popover-foreground: #F8FAFC;
 
-  --primary: #FB923C; /* Bright orange for dark contrast */
-  --primary-foreground: #0F172A;
+  --primary: #F97316; /* Vibrant saffron orange for dark contrast */
+  --primary-foreground: #FFFFFF;
 
   --secondary: #1E293B;
   --secondary-foreground: #F8FAFC;
@@ -157,36 +157,36 @@
 
   --accent: #1E293B;
   --accent-foreground: #93C5FD;
-  --accent-blue: #60A5FA;
-  --accent-green: #34D399;
+  --accent-blue: #3B82F6;
+  --accent-green: #10B981;
 
-  --success: #34D399;
+  --success: #10B981;
   --success-foreground: #0F172A;
 
-  --warning: #FBBF24;
+  --warning: #F59E0B;
   --warning-foreground: #0F172A;
 
-  --danger: #F87171;
+  --danger: #EF4444;
   --danger-foreground: #0F172A;
 
-  --border: rgba(255, 255, 255, 0.1);
+  --border: rgba(255, 255, 255, 0.12);
   --input: rgba(255, 255, 255, 0.15);
-  --ring: rgba(251, 146, 60, 0.4);
+  --ring: rgba(249, 115, 22, 0.5);
 
-  --chart-1: #FB923C;
-  --chart-2: #60A5FA;
-  --chart-3: #34D399;
+  --chart-1: #F97316;
+  --chart-2: #3B82F6;
+  --chart-3: #10B981;
   --chart-4: #A78BFA;
-  --chart-5: #FBBF24;
+  --chart-5: #F59E0B;
 
   --sidebar: #0B0F17;
   --sidebar-foreground: #F8FAFC;
-  --sidebar-primary: #FB923C;
-  --sidebar-primary-foreground: #0F172A;
+  --sidebar-primary: #F97316;
+  --sidebar-primary-foreground: #FFFFFF;
   --sidebar-accent: #1E293B;
   --sidebar-accent-foreground: #F8FAFC;
-  --sidebar-border: rgba(255, 255, 255, 0.1);
-  --sidebar-ring: rgba(251, 146, 60, 0.4);
+  --sidebar-border: rgba(255, 255, 255, 0.12);
+  --sidebar-ring: rgba(249, 115, 22, 0.5);
 }
 
 @layer base {
@@ -210,7 +210,7 @@
   }
 
   ::selection {
-    background-color: rgba(249, 115, 22, 0.2);
+    background-color: rgba(249, 115, 22, 0.3);
     color: #F97316;
   }
 
@@ -272,40 +272,48 @@
 }
 
 @utility glass-card {
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-xl);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .dark .glass-card {
-  background-color: rgba(18, 24, 36, 0.75);
-  border-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(15, 23, 42, 0.85);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 @utility glass-card-hover {
-  background-color: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.9);
   border-radius: var(--radius-xl);
   box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.05);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   &:hover {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.95);
     box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.08);
-    border-color: rgba(249, 115, 22, 0.3);
+    border-color: rgba(249, 115, 22, 0.4);
     transform: translateY(-2px);
   }
 }
 
+.dark .glass-card-hover {
+  background-color: rgba(15, 23, 42, 0.85);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
 .dark .glass-card-hover:hover {
-  background-color: rgba(18, 24, 36, 0.9);
-  border-color: rgba(251, 146, 60, 0.3);
+  background-color: rgba(21, 32, 54, 0.95);
+  border-color: rgba(249, 115, 22, 0.4);
+  box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.6), 0 0 20px -5px rgba(249, 115, 22, 0.25);
 }
 
 @utility glass-panel {

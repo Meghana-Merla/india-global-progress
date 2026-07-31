@@ -24,7 +24,7 @@ export const navigationItems: NavItem[] = [
   { title: "Compare", href: "/compare", icon: GitCompare },
   { title: "World Map", href: "/world-map", icon: Globe },
   { title: "Trends", href: "#trends", icon: TrendingUp },
-  { title: "AI Insights", href: "#ai-insights", icon: Sparkles, badge: "AI" },
+  { title: "AI Insights", href: "/ai-insights", icon: Sparkles, badge: "AI" },
   { title: "Reports", href: "#reports", icon: FileText },
   { title: "Sources", href: "#sources", icon: Database },
 ];

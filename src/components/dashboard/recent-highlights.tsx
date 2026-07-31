@@ -2,10 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import {
-  HighlightItem,
-  recentHighlightsData,
-} from "./dashboard-data";
+import { HighlightItem } from "@/data/mock";
 import {
   TrendingUp,
   TrendingDown,
@@ -18,7 +15,7 @@ export interface RecentHighlightsProps {
 }
 
 export function RecentHighlights({
-  highlights = recentHighlightsData,
+  highlights = [],
 }: RecentHighlightsProps) {
   const [filter, setFilter] = useState<"all" | "improvement" | "decline">("all");
 

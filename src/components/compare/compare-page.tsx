@@ -6,14 +6,18 @@ import { CompareSummary } from "./compare-summary";
 import { CompareRadarChart } from "./compare-radar-chart";
 import { CategoryComparison } from "./category-comparison";
 import { AICompareSummary } from "./ai-compare-summary";
-import { countriesData } from "./compare-data";
+import { useYear } from "@/providers";
+import { getCompareData } from "@/data/mock";
 
 export function ComparePage() {
+  const { selectedYear } = useYear();
   const [country1Id, setCountry1Id] = useState("IND");
   const [country2Id, setCountry2Id] = useState("USA");
 
-  const country1 = countriesData[country1Id] || countriesData["IND"];
-  const country2 = countriesData[country2Id] || countriesData["USA"];
+  const currentCompareData = getCompareData(selectedYear);
+
+  const country1 = currentCompareData[country1Id] || currentCompareData["IND"];
+  const country2 = currentCompareData[country2Id] || currentCompareData["USA"];
 
   const handleSwap = () => {
     setCountry1Id(country2Id);

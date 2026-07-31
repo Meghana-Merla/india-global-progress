@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { CategoryData, categoryOverviewData } from "./dashboard-data";
+import { CategoryData } from "@/data/mock";
 import { CategoryCard } from "./category-card";
 import { Search, Layers, SlidersHorizontal } from "lucide-react";
 
@@ -13,7 +13,7 @@ export interface CategoryGridProps {
 }
 
 export function CategoryGrid({
-  categories = categoryOverviewData,
+  categories = [],
   title = "Category Overview",
   subtitle = "Performance across 10 strategic global evaluation pillars",
 }: CategoryGridProps) {

@@ -1,9 +1,11 @@
 "use client";
 
 import React from "react";
-import { ArrowLeftRight, Sparkles, Globe2 } from "lucide-react";
+import { ArrowLeftRight, Sparkles, Globe2, Calendar } from "lucide-react";
 import { countryList } from "./compare-data";
 import { motion } from "framer-motion";
+import { useYear } from "@/providers";
+import { Year } from "@/data/mock";
 
 export interface CompareHeaderProps {
   country1Id: string;
@@ -20,6 +22,7 @@ export function CompareHeader({
   onCountry2Change,
   onSwap,
 }: CompareHeaderProps) {
+  const { selectedYear, setSelectedYear, availableYears } = useYear();
   const c1 = countryList.find((c) => c.id === country1Id) || countryList[0];
   const c2 = countryList.find((c) => c.id === country2Id) || countryList[1];
 
@@ -29,7 +32,7 @@ export function CompareHeader({
       <div className="text-center max-w-3xl mx-auto space-y-2">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>Cross-Country Intelligence Benchmark</span>
+          <span>Cross-Country Intelligence Benchmark ({selectedYear})</span>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
           Country <span className="text-gradient-primary">Comparison</span>
@@ -37,6 +40,29 @@ export function CompareHeader({
         <p className="text-sm sm:text-base text-muted-foreground">
           Compare India's international rankings and pillar performances side-by-side with global peers.
         </p>
+
+        {/* Global Year Switcher Bar */}
+        <div className="pt-2 flex items-center justify-center">
+          <div className="inline-flex items-center gap-2 p-1.5 rounded-xl bg-card border border-border shadow-xs">
+            <Calendar className="w-4 h-4 text-primary ml-2" />
+            <span className="text-xs font-bold text-muted-foreground">Benchmark Year:</span>
+            <div className="flex items-center gap-1">
+              {availableYears.map((year) => (
+                <button
+                  key={year}
+                  onClick={() => setSelectedYear(year)}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedYear === year
+                      ? "bg-primary text-white shadow-xs"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Country Selectors Box */}
@@ -77,7 +103,7 @@ export function CompareHeader({
             <button
               onClick={onSwap}
               title="Swap Countries"
-              className="w-10 h-10 rounded-full bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-95 group"
+              className="w-10 h-10 rounded-full bg-primary/10 border border-primary/30 text-primary hover:bg-primary hover:text-white flex items-center justify-center transition-all duration-300 shadow-md active:scale-95 group cursor-pointer"
             >
               <ArrowLeftRight className="w-4 h-4 group-hover:rotate-180 transition-transform duration-500" />
             </button>

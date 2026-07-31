@@ -7,6 +7,7 @@ import { Section, SectionHeading } from "@/components/layouts";
 import { AICard } from "./ai-card";
 import { aiCapabilities, AICapabilityItem } from "./ai-data";
 import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 export interface AIPreviewProps {
@@ -131,14 +132,16 @@ export function AIPreview({
             transition={{ delay: 0.4, duration: 0.4 }}
             className="mt-8 flex items-center gap-4"
           >
-            <Button
-              size="lg"
-              className="h-12 px-6 rounded-xl font-semibold bg-gradient-primary text-white shadow-glow hover:shadow-glow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer"
-            >
-              <Sparkles className="w-4 h-4 text-amber-300 mr-2" />
-              Try AI Insights
-              <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-            </Button>
+            <Link href="/ai-insights">
+              <Button
+                size="lg"
+                className="h-12 px-6 rounded-xl font-semibold bg-gradient-primary text-white shadow-glow hover:shadow-glow-lg hover:scale-[1.02] transition-all duration-300 group cursor-pointer"
+              >
+                <Sparkles className="w-4 h-4 text-amber-300 mr-2" />
+                Try AI Insights
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </div>

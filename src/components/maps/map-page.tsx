@@ -2,17 +2,20 @@
 
 import React from "react";
 import { WorldMapContainer } from "./world-map-container";
-import { Sparkles, Globe, MapPin, BarChart2 } from "lucide-react";
+import { Sparkles, Globe, MapPin, BarChart2, Calendar } from "lucide-react";
 import { motion } from "framer-motion";
+import { useYear } from "@/providers";
 
 export function MapPage() {
+  const { selectedYear, setSelectedYear, availableYears } = useYear();
+
   return (
     <div className="space-y-8 pb-12">
       {/* Page Header */}
       <div className="space-y-2 text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider">
           <Globe className="w-3.5 h-3.5" />
-          <span>Geographic Global Intelligence</span>
+          <span>Geographic Global Intelligence ({selectedYear})</span>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
           Interactive <span className="text-gradient-primary">World Map</span>
@@ -20,6 +23,29 @@ export function MapPage() {
         <p className="text-sm sm:text-base text-muted-foreground">
           Visualize India's global rankings and compare strategic evaluation scores across world economies.
         </p>
+
+        {/* Global Year Switcher Bar */}
+        <div className="pt-2 flex items-center justify-center">
+          <div className="inline-flex items-center gap-2 p-1.5 rounded-xl bg-card border border-border shadow-xs">
+            <Calendar className="w-4 h-4 text-primary ml-2" />
+            <span className="text-xs font-bold text-muted-foreground">Edition:</span>
+            <div className="flex items-center gap-1">
+              {availableYears.map((year) => (
+                <button
+                  key={year}
+                  onClick={() => setSelectedYear(year)}
+                  className={`px-3 py-1 text-xs font-bold rounded-lg transition-all cursor-pointer ${
+                    selectedYear === year
+                      ? "bg-primary text-white shadow-xs"
+                      : "text-muted-foreground hover:text-foreground hover:bg-secondary"
+                  }`}
+                >
+                  {year}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Main Map Component */}

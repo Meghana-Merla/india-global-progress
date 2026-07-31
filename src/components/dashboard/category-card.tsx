@@ -16,7 +16,7 @@ import {
   ChevronRight,
   LucideIcon,
 } from "lucide-react";
-import { CategoryData } from "./dashboard-data";
+import { CategoryData } from "@/data/mock";
 
 const iconMap: Record<string, LucideIcon> = {
   TrendingUp,

@@ -3,24 +3,21 @@
 import React, { useState } from "react";
 import { Download, RefreshCw, Calendar, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
+import { useYear } from "@/providers";
+import { Year } from "@/data/mock";
 
 export interface DashboardHeaderProps {
-  selectedYear: string;
-  onYearChange: (year: string) => void;
   onRefresh?: () => void;
   onExport?: () => void;
 }
 
 export function DashboardHeader({
-  selectedYear,
-  onYearChange,
   onRefresh,
   onExport,
 }: DashboardHeaderProps) {
+  const { selectedYear, setSelectedYear, availableYears } = useYear();
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [exportMessage, setExportMessage] = useState<string | null>(null);
-
-  const years = ["2025", "2024", "2023", "2022", "2021"];
 
   const handleRefreshClick = () => {
     setIsRefreshing(true);
@@ -32,7 +29,7 @@ export function DashboardHeader({
 
   const handleExportClick = () => {
     if (onExport) onExport();
-    setExportMessage("Exporting dashboard report...");
+    setExportMessage(`Exporting ${selectedYear} dashboard report...`);
     setTimeout(() => {
       setExportMessage(null);
     }, 2500);
@@ -44,7 +41,7 @@ export function DashboardHeader({
       <div>
         <div className="flex items-center gap-2 mb-1">
           <span className="px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 text-[11px] font-bold tracking-wider uppercase inline-flex items-center gap-1">
-            <Sparkles className="w-3 h-3" /> LIVE INTELLIGENCE
+            <Sparkles className="w-3 h-3" /> LIVE INTELLIGENCE ({selectedYear})
           </span>
         </div>
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold tracking-tight text-foreground">
@@ -59,20 +56,20 @@ export function DashboardHeader({
       <div className="flex flex-wrap items-center gap-3">
         {/* Year Selector */}
         <div className="relative flex items-center">
-          <Calendar className="w-4 h-4 absolute left-3 text-muted-foreground pointer-events-none" />
+          <Calendar className="w-4 h-4 absolute left-3 text-primary pointer-events-none" />
           <select
             value={selectedYear}
-            onChange={(e) => onYearChange(e.target.value)}
-            className="pl-9 pr-8 py-2 text-sm font-semibold rounded-xl bg-card border border-border text-foreground hover:border-primary/50 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all cursor-pointer shadow-sm appearance-none"
+            onChange={(e) => setSelectedYear(e.target.value as Year)}
+            className="pl-9 pr-8 py-2 text-sm font-bold rounded-xl bg-card border border-border text-foreground hover:border-primary focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all cursor-pointer shadow-sm appearance-none"
             aria-label="Select Year"
           >
-            {years.map((year) => (
+            {availableYears.map((year) => (
               <option key={year} value={year}>
                 {year} Edition
               </option>
             ))}
           </select>
-          <div className="absolute right-3 pointer-events-none text-xs text-muted-foreground">
+          <div className="absolute right-3 pointer-events-none text-xs text-primary font-bold">
             ▼
           </div>
         </div>
@@ -81,7 +78,7 @@ export function DashboardHeader({
         <button
           onClick={handleRefreshClick}
           disabled={isRefreshing}
-          className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-xl bg-card border border-border text-foreground hover:bg-secondary hover:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all shadow-sm active:scale-95 disabled:opacity-70"
+          className="inline-flex items-center gap-2 px-3.5 py-2 text-sm font-semibold rounded-xl bg-card border border-border text-foreground hover:bg-secondary hover:border-primary/40 focus:outline-none focus:ring-2 focus:ring-primary/30 transition-all shadow-sm active:scale-95 disabled:opacity-70 cursor-pointer"
           title="Refresh Data"
           aria-label="Refresh Data"
         >
@@ -94,7 +91,7 @@ export function DashboardHeader({
         {/* Export Button */}
         <button
           onClick={handleExportClick}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-primary text-white shadow-glow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all active:scale-95"
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-xl bg-gradient-primary text-white shadow-glow hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-primary/40 transition-all active:scale-95 cursor-pointer"
           title="Export Report"
           aria-label="Export Report"
         >
@@ -109,7 +106,7 @@ export function DashboardHeader({
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 10 }}
-          className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-white/20 flex items-center gap-2"
+          className="fixed bottom-6 right-6 z-50 px-4 py-3 rounded-xl bg-slate-900 text-white text-xs font-semibold shadow-2xl border border-primary/40 flex items-center gap-2"
         >
           <Download className="w-4 h-4 text-primary animate-bounce" />
           <span>{exportMessage}</span>

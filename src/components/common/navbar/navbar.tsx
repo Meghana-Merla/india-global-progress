@@ -4,8 +4,8 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
-import { motion } from "framer-motion";
-import { Search, Sun, Moon, Menu } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Search, Sun, Moon, Menu, ChevronDown } from "lucide-react";
 import { NavItem, navigationItems } from "./nav-links";
 import { Logo } from "./logo";
 import { MobileMenu } from "./mobile-menu";
@@ -38,6 +38,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [moreOpen, setMoreOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -47,21 +48,32 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
     setTheme(theme === "dark" ? "light" : "dark");
   };
 
+  // Primary visible items on desktop
+  const primaryTitles = ["Home", "Dashboard", "Categories", "Compare", "World Map", "AI Insights"];
+  const primaryItems = items.filter((item) => primaryTitles.includes(item.title));
+  const secondaryItems = items.filter((item) => !primaryTitles.includes(item.title));
+
+  const isMoreActive = secondaryItems.some(
+    (item) =>
+      pathname === item.href ||
+      (item.href !== "/" && pathname.startsWith(item.href))
+  );
+
   return (
     <nav
       className={cn(
-        "w-full h-[72px] flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto",
+        "w-full h-[72px] flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto gap-4",
         className
       )}
     >
       {/* Left Section: Brand Logo */}
-      <div className="flex items-center gap-6">
+      <div className="flex items-center shrink-0">
         <Logo />
       </div>
 
       {/* Center Navigation: Desktop Nav Pills */}
-      <div className="hidden lg:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner max-w-full overflow-x-auto scrollbar-none">
-        {items.map((item) => {
+      <div className="hidden lg:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner shrink-0">
+        {primaryItems.map((item) => {
           const isActive =
             pathname === item.href ||
             (item.href !== "/" && pathname.startsWith(item.href));
@@ -71,9 +83,9 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
               key={item.title}
               href={item.href}
               className={cn(
-                "relative px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-200 flex items-center gap-1 select-none shrink-0",
+                "relative px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 flex items-center gap-1 select-none shrink-0",
                 isActive
-                  ? "text-primary font-semibold"
+                  ? "text-primary font-bold"
                   : "text-muted-foreground hover:text-foreground hover:bg-background/40"
               )}
             >
@@ -93,10 +105,76 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
             </Link>
           );
         })}
+
+        {/* More Dropdown for remaining desktop items */}
+        {secondaryItems.length > 0 && (
+          <div className="relative">
+            <button
+              onClick={() => setMoreOpen((prev) => !prev)}
+              className={cn(
+                "px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 flex items-center gap-1 cursor-pointer select-none shrink-0",
+                isMoreActive
+                  ? "bg-primary text-white shadow-xs font-bold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/40"
+              )}
+              aria-label="More navigation pages"
+            >
+              <span>More</span>
+              <ChevronDown
+                className={cn(
+                  "w-3.5 h-3.5 transition-transform duration-200",
+                  moreOpen && "rotate-180"
+                )}
+              />
+            </button>
+
+            <AnimatePresence>
+              {moreOpen && (
+                <>
+                  <div
+                    className="fixed inset-0 z-40"
+                    onClick={() => setMoreOpen(false)}
+                  />
+                  <motion.div
+                    initial={{ opacity: 0, y: 8, scale: 0.95 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: 8, scale: 0.95 }}
+                    transition={{ duration: 0.15 }}
+                    className="absolute top-full right-0 mt-2 w-44 py-1.5 rounded-2xl bg-background/95 backdrop-blur-xl border border-border/60 shadow-2xl z-50 flex flex-col gap-0.5 p-1.5"
+                  >
+                    {secondaryItems.map((item) => {
+                      const Icon = item.icon;
+                      const isActive =
+                        pathname === item.href ||
+                        (item.href !== "/" && pathname.startsWith(item.href));
+
+                      return (
+                        <Link
+                          key={item.title}
+                          href={item.href}
+                          onClick={() => setMoreOpen(false)}
+                          className={cn(
+                            "flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-medium transition-colors select-none",
+                            isActive
+                              ? "bg-primary/10 text-primary font-bold border border-primary/20"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                          )}
+                        >
+                          {Icon && <Icon className="w-3.5 h-3.5 text-primary shrink-0" />}
+                          <span>{item.title}</span>
+                        </Link>
+                      );
+                    })}
+                  </motion.div>
+                </>
+              )}
+            </AnimatePresence>
+          </div>
+        )}
       </div>
 
       {/* Right Section: Action Icons */}
-      <div className="flex items-center gap-1.5 sm:gap-2.5">
+      <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
         {/* Command Palette Trigger Button */}
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
@@ -132,7 +210,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
           href="https://github.com/Meghana-Merla/india-global-progress"
           target="_blank"
           rel="noreferrer"
-          className="hidden sm:flex p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none"
+          className="p-2 sm:p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none"
           aria-label="GitHub Repository"
           title="GitHub Repository"
         >

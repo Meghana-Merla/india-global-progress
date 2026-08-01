@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MapCountryData } from "./map-data";
+import { fetchCountryAISummary } from "@/lib/ai/country-summary-cache";
 import {
   X,
   Trophy,
@@ -13,6 +14,7 @@ import {
   GitCompare,
   Radar as RadarIcon,
   Sparkles,
+  Loader2,
 } from "lucide-react";
 import {
   RadarChart,
@@ -33,12 +35,67 @@ export interface CountrySideDrawerProps {
 
 export function CountrySideDrawer({ country, onClose }: CountrySideDrawerProps) {
   const [mounted, setMounted] = useState(false);
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const [loadingAi, setLoadingAi] = useState(false);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Lock body scroll when drawer is open
+  useEffect(() => {
+    if (country) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "unset";
+    }
+    return () => {
+      document.body.style.overflow = "unset";
+    };
+  }, [country]);
+
+  // ESC key listener to close drawer
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && country) {
+        onClose();
+      }
+    };
+    if (country) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [country, onClose]);
+
+  // Fetch Gemini AI Summary for the country
+  useEffect(() => {
+    if (country) {
+      setLoadingAi(true);
+      fetchCountryAISummary(country.name, country.id || country.code)
+        .then((summary) => {
+          if (summary) {
+            setAiSummary(summary);
+          } else {
+            setAiSummary(country.overview);
+          }
+        })
+        .catch(() => setAiSummary(country.overview))
+        .finally(() => setLoadingAi(false));
+    } else {
+      setAiSummary(null);
+    }
+  }, [country]);
+
   if (!country) return null;
+
+  const isIndia = Boolean(
+    country.isIndia ||
+      country.id === "IND" ||
+      country.code === "IND" ||
+      country.name?.toLowerCase() === "india"
+  );
 
   const categoryKeys = [
     { id: "economy", name: "Economy" },
@@ -67,7 +124,7 @@ export function CountrySideDrawer({ country, onClose }: CountrySideDrawerProps) 
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           onClick={onClose}
-          className="fixed inset-0 bg-black/50 backdrop-blur-xs transition-opacity"
+          className="fixed inset-0 bg-black/60 backdrop-blur-md transition-opacity"
         />
 
         {/* Slide-over Panel */}
@@ -87,7 +144,7 @@ export function CountrySideDrawer({ country, onClose }: CountrySideDrawerProps) 
                   <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
                     {country.name}
                   </h2>
-                  {country.isIndia && (
+                  {isIndia && (
                     <span className="px-2 py-0.5 rounded-full bg-primary/20 text-primary border border-primary/30 text-[10px] font-bold uppercase">
                       HOST NATION
                     </span>
@@ -136,14 +193,21 @@ export function CountrySideDrawer({ country, onClose }: CountrySideDrawerProps) 
               </div>
             </div>
 
-            {/* Overview Description */}
+            {/* Overview Description (Gemini AI Summary) */}
             <div className="space-y-1.5">
-              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-                Country Intelligence Overview
+              <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-primary" /> Gemini AI Executive Summary
               </h3>
-              <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed bg-muted/40 p-3.5 rounded-xl border border-border/40">
-                {country.overview}
-              </p>
+              <div className="text-xs sm:text-sm text-foreground leading-relaxed bg-muted/40 p-3.5 rounded-xl border border-border/40 min-h-[70px]">
+                {loadingAi ? (
+                  <div className="flex items-center gap-2 text-muted-foreground py-2 font-medium">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary" />
+                    <span>Generating AI summary for {country.name}...</span>
+                  </div>
+                ) : (
+                  aiSummary || country.overview
+                )}
+              </div>
             </div>
 
             {/* Recharts Radar Chart */}
@@ -173,8 +237,8 @@ export function CountrySideDrawer({ country, onClose }: CountrySideDrawerProps) 
                       <Radar
                         name={country.name}
                         dataKey="score"
-                        stroke={country.isIndia ? "#F97316" : "#3B82F6"}
-                        fill={country.isIndia ? "#F97316" : "#3B82F6"}
+                        stroke={isIndia ? "#F97316" : "#3B82F6"}
+                        fill={isIndia ? "#F97316" : "#3B82F6"}
                         fillOpacity={0.4}
                         strokeWidth={2}
                       />
@@ -225,17 +289,25 @@ export function CountrySideDrawer({ country, onClose }: CountrySideDrawerProps) 
 
           {/* Drawer Footer Actions */}
           <div className="p-4 border-t border-border/40 bg-card/95 backdrop-blur-md sticky bottom-0 z-20">
-            <Link
-              href={`/compare?c2=${country.id}`}
-              onClick={onClose}
-              className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-primary text-white font-bold text-sm shadow-glow hover:opacity-95 transition-all"
-            >
-              <GitCompare className="w-4 h-4" />
-              <span>Compare {country.name} with India 🇮🇳</span>
-            </Link>
+            {isIndia ? (
+              <div className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-secondary/80 text-muted-foreground font-bold text-sm border border-border/60 cursor-not-allowed">
+                <GitCompare className="w-4 h-4 text-muted-foreground" />
+                <span>Viewing Host Country</span>
+              </div>
+            ) : (
+              <Link
+                href={`/compare?c1=IND&c2=${country.id || country.code}`}
+                onClick={onClose}
+                className="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-primary text-white font-bold text-sm shadow-glow hover:opacity-95 transition-all"
+              >
+                <GitCompare className="w-4 h-4" />
+                <span>Compare {country.name} with India 🇮🇳</span>
+              </Link>
+            )}
           </div>
         </motion.div>
       </div>
     </AnimatePresence>
   );
 }
+

@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { generateAIIntelligence, AIChatRequest } from "@/lib/ai";
+import {
+  generateAIIntelligence,
+  AIChatRequest,
+  detectIntent,
+  buildPromptForIntent,
+} from "@/lib/ai";
 
 export async function POST(req: Request) {
   try {
@@ -12,12 +17,39 @@ export async function POST(req: Request) {
       );
     }
 
+    const question = body.question.trim();
+    const selectedYear = body.selectedYear || "2025";
+    const selectedCountry = body.selectedCountry || "India";
+    const comparisonCountry = body.comparisonCountry || "USA";
+    const pageContext = body.pageContext || "ai-insights";
+
+    // 1. Detect Intent
+    const intent = detectIntent(question, {
+      pageContext,
+      selectedCountry,
+      comparisonCountry,
+    });
+
+    // 2 & 3. Build Intent-Specific Prompt with Relevant Dataset ONLY
+    const { promptName, datasetNames } = buildPromptForIntent(intent, {
+      question,
+      selectedYear,
+      selectedCountry,
+      comparisonCountry,
+      pageContext,
+    });
+
+    // 5. Console Logging in Development
+    console.log("Detected intent:", intent);
+    console.log("Selected prompt:", promptName);
+    console.log("Included datasets:", datasetNames.join(", "));
+
     const aiResponse = await generateAIIntelligence({
-      question: body.question.trim(),
-      selectedYear: body.selectedYear || "2025",
-      selectedCountry: body.selectedCountry || "India",
-      comparisonCountry: body.comparisonCountry || "USA",
-      pageContext: body.pageContext || "ai-insights",
+      question,
+      selectedYear,
+      selectedCountry,
+      comparisonCountry,
+      pageContext,
     });
 
     return NextResponse.json(aiResponse);
@@ -32,3 +64,4 @@ export async function POST(req: Request) {
     );
   }
 }
+

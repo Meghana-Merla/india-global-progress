@@ -31,6 +31,7 @@ export interface CountryData {
   name: string;
   flag: string;
   code: string;
+  slug?: string;
   region: string;
   metrics: CountryMetrics;
   categories: Record<string, CategoryDetail>;
@@ -269,6 +270,93 @@ export const countriesData: Record<string, CountryData> = {
       "digital-government": { name: "Digital Government", score: 79.2, globalRank: "#24", rankNum: 24 },
     },
   },
+  AUS: {
+    id: "AUS",
+    name: "Australia",
+    flag: "🇦🇺",
+    code: "AUS",
+    region: "Oceania",
+    metrics: {
+      gdpRank: { label: "GDP Rank", value: "#13", rankNum: 13, lowerIsBetter: true, unit: "$1.7T" },
+      hdi: { label: "HDI Score", value: "0.951", scoreNum: 0.951, rank: "#5", lowerIsBetter: false },
+      innovation: { label: "Innovation Rank", value: "#24", rankNum: 24, scoreNum: 49.8, lowerIsBetter: true },
+      happiness: { label: "Happiness Rank", value: "#10", rankNum: 10, scoreNum: 7.18, lowerIsBetter: true },
+      aiReadiness: { label: "AI Readiness", value: "#14", rankNum: 14, scoreNum: 75.2, lowerIsBetter: true },
+      pressFreedom: { label: "Press Freedom", value: "#27", rankNum: 27, scoreNum: 78.2, lowerIsBetter: true },
+      globalPeace: { label: "Global Peace", value: "#11", rankNum: 11, scoreNum: 1.38, lowerIsBetter: true },
+      internetPenetration: { label: "Internet Penetration", value: "96%", scoreNum: 96, lowerIsBetter: false },
+    },
+    categories: {
+      economy: { name: "Economy", score: 86.4, globalRank: "#13", rankNum: 13 },
+      society: { name: "Society", score: 92.1, globalRank: "#5", rankNum: 5 },
+      governance: { name: "Governance", score: 91.5, globalRank: "#7", rankNum: 7 },
+      technology: { name: "Technology", score: 84.8, globalRank: "#15", rankNum: 15 },
+      education: { name: "Education", score: 91.2, globalRank: "#6", rankNum: 6 },
+      healthcare: { name: "Healthcare", score: 92.8, globalRank: "#6", rankNum: 6 },
+      environment: { name: "Environment", score: 78.4, globalRank: "#24", rankNum: 24 },
+      safety: { name: "Safety", score: 90.1, globalRank: "#11", rankNum: 11 },
+      equality: { name: "Equality", score: 82.5, globalRank: "#22", rankNum: 22 },
+      "digital-government": { name: "Digital Government", score: 86.8, globalRank: "#8", rankNum: 8 },
+    },
+  },
+  FRA: {
+    id: "FRA",
+    name: "France",
+    flag: "🇫🇷",
+    code: "FRA",
+    region: "Europe",
+    metrics: {
+      gdpRank: { label: "GDP Rank", value: "#7", rankNum: 7, lowerIsBetter: true, unit: "$3.05T" },
+      hdi: { label: "HDI Score", value: "0.903", scoreNum: 0.903, rank: "#28", lowerIsBetter: false },
+      innovation: { label: "Innovation Rank", value: "#12", rankNum: 12, scoreNum: 54.8, lowerIsBetter: true },
+      happiness: { label: "Happiness Rank", value: "#27", rankNum: 27, scoreNum: 6.66, lowerIsBetter: true },
+      aiReadiness: { label: "AI Readiness", value: "#9", rankNum: 9, scoreNum: 76.8, lowerIsBetter: true },
+      pressFreedom: { label: "Press Freedom", value: "#21", rankNum: 21, scoreNum: 78.8, lowerIsBetter: true },
+      globalPeace: { label: "Global Peace", value: "#30", rankNum: 30, scoreNum: 1.64, lowerIsBetter: true },
+      internetPenetration: { label: "Internet Penetration", value: "93%", scoreNum: 93, lowerIsBetter: false },
+    },
+    categories: {
+      economy: { name: "Economy", score: 84.8, globalRank: "#7", rankNum: 7 },
+      society: { name: "Society", score: 89.2, globalRank: "#12", rankNum: 12 },
+      governance: { name: "Governance", score: 87.4, globalRank: "#15", rankNum: 15 },
+      technology: { name: "Technology", score: 87.5, globalRank: "#8", rankNum: 8 },
+      education: { name: "Education", score: 88.6, globalRank: "#12", rankNum: 12 },
+      healthcare: { name: "Healthcare", score: 91.4, globalRank: "#8", rankNum: 8 },
+      environment: { name: "Environment", score: 83.2, globalRank: "#13", rankNum: 13 },
+      safety: { name: "Safety", score: 82.1, globalRank: "#32", rankNum: 32 },
+      equality: { name: "Equality", score: 81.5, globalRank: "#26", rankNum: 26 },
+      "digital-government": { name: "Digital Government", score: 85.9, globalRank: "#10", rankNum: 10 },
+    },
+  },
+  ARE: {
+    id: "ARE",
+    name: "United Arab Emirates",
+    flag: "🇦🇪",
+    code: "ARE",
+    region: "Middle East",
+    metrics: {
+      gdpRank: { label: "GDP Rank", value: "#31", rankNum: 31, lowerIsBetter: true, unit: "$504B" },
+      hdi: { label: "HDI Score", value: "0.911", scoreNum: 0.911, rank: "#26", lowerIsBetter: false },
+      innovation: { label: "Innovation Rank", value: "#32", rankNum: 32, scoreNum: 43.2, lowerIsBetter: true },
+      happiness: { label: "Happiness Rank", value: "#26", rankNum: 26, scoreNum: 6.57, lowerIsBetter: true },
+      aiReadiness: { label: "AI Readiness", value: "#18", rankNum: 18, scoreNum: 71.4, lowerIsBetter: true },
+      pressFreedom: { label: "Press Freedom", value: "#145", rankNum: 145, scoreNum: 41.2, lowerIsBetter: true },
+      globalPeace: { label: "Global Peace", value: "#31", rankNum: 31, scoreNum: 1.65, lowerIsBetter: true },
+      internetPenetration: { label: "Internet Penetration", value: "99%", scoreNum: 99, lowerIsBetter: false },
+    },
+    categories: {
+      economy: { name: "Economy", score: 86.2, globalRank: "#15", rankNum: 15 },
+      society: { name: "Society", score: 78.4, globalRank: "#42", rankNum: 42 },
+      governance: { name: "Governance", score: 79.5, globalRank: "#32", rankNum: 32 },
+      technology: { name: "Technology", score: 85.1, globalRank: "#12", rankNum: 12 },
+      education: { name: "Education", score: 76.2, globalRank: "#45", rankNum: 45 },
+      healthcare: { name: "Healthcare", score: 81.4, globalRank: "#38", rankNum: 38 },
+      environment: { name: "Environment", score: 62.5, globalRank: "#65", rankNum: 65 },
+      safety: { name: "Safety", score: 91.8, globalRank: "#8", rankNum: 8 },
+      equality: { name: "Equality", score: 69.4, globalRank: "#68", rankNum: 68 },
+      "digital-government": { name: "Digital Government", score: 90.2, globalRank: "#4", rankNum: 4 },
+    },
+  },
 };
 
 export const countryList = Object.values(countriesData).map((c) => ({
@@ -276,6 +364,7 @@ export const countryList = Object.values(countriesData).map((c) => ({
   name: c.name,
   flag: c.flag,
   code: c.code,
+  slug: c.code.toLowerCase(),
   region: c.region,
 }));
 

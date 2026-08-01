@@ -3,6 +3,7 @@ export interface MapCountryData {
   name: string;
   flag: string;
   code: string;
+  slug?: string;
   region: string;
   coords: [number, number]; // [latitude, longitude]
   overallScore: number; // out of 100

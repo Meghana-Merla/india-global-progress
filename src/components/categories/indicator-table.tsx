@@ -18,12 +18,14 @@ export interface IndicatorTableProps {
   indicators: CategoryIndicator[];
   categoryTitle?: string;
   className?: string;
+  highlightedIndicatorId?: string | null;
 }
 
 export function IndicatorTable({
   indicators,
   categoryTitle = "Category",
   className,
+  highlightedIndicatorId,
 }: IndicatorTableProps) {
   const [search, setSearch] = useState("");
   const [trendFilter, setTrendFilter] = useState("all");
@@ -70,7 +72,7 @@ export function IndicatorTable({
   };
 
   return (
-    <div className={cn("glass-card p-6 rounded-2xl border border-border/60 shadow-lg space-y-6", className)}>
+    <div id="indicator-explorer-table" className={cn("glass-card p-6 rounded-2xl border border-border/60 shadow-lg space-y-6", className)}>
       {/* Header & Title */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border/40 pb-5">
         <div>
@@ -173,15 +175,30 @@ export function IndicatorTable({
           </thead>
           <tbody className="divide-y divide-border/40 font-medium">
             {filteredIndicators.length > 0 ? (
-              filteredIndicators.map((ind) => (
-                <tr
-                  key={ind.id}
-                  className="hover:bg-primary/5 transition-colors group"
-                >
-                  {/* Indicator Name */}
-                  <td className="py-3.5 px-4 text-foreground font-semibold group-hover:text-primary transition-colors">
-                    {ind.name}
-                  </td>
+              filteredIndicators.map((ind) => {
+                const isHighlighted = highlightedIndicatorId === ind.id;
+                return (
+                  <tr
+                    key={ind.id}
+                    id={`indicator-row-${ind.id}`}
+                    className={cn(
+                      "transition-all duration-300 group",
+                      isHighlighted
+                        ? "bg-primary/20 border-y-2 border-primary/80 shadow-md ring-2 ring-primary/40 font-bold"
+                        : "hover:bg-primary/5 font-medium"
+                    )}
+                  >
+                    {/* Indicator Name */}
+                    <td className="py-3.5 px-4 text-foreground font-semibold group-hover:text-primary transition-colors">
+                      <div className="flex items-center gap-2">
+                        <span>{ind.name}</span>
+                        {isHighlighted && (
+                          <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase rounded-full bg-primary text-primary-foreground shadow-xs animate-pulse">
+                            Selected
+                          </span>
+                        )}
+                      </div>
+                    </td>
 
                   {/* Rank */}
                   <td className="py-3.5 px-4 font-extrabold text-foreground">
@@ -236,7 +253,8 @@ export function IndicatorTable({
                     )}
                   </td>
                 </tr>
-              ))
+              );
+            })
             ) : (
               <tr>
                 <td colSpan={6} className="py-12 text-center text-muted-foreground">

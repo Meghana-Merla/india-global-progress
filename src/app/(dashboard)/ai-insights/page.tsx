@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { AppShell, PageContainer } from "@/components/layouts";
 import { AIInsightsPage } from "@/components/ai-insights";
 import { Metadata } from "next";
@@ -12,8 +12,11 @@ export default function AIInsightsRoute() {
   return (
     <AppShell>
       <PageContainer>
-        <AIInsightsPage />
+        <Suspense fallback={<div className="p-8 text-center text-muted-foreground font-semibold">Loading AI Insights...</div>}>
+          <AIInsightsPage />
+        </Suspense>
       </PageContainer>
     </AppShell>
   );
 }
+

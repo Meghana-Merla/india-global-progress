@@ -14,17 +14,15 @@ import { useYear } from "@/providers";
 import { FileText, Sparkles } from "lucide-react";
 
 export function ReportsPage() {
-  const { selectedYear: globalYear, setSelectedYear: setGlobalYear } = useYear();
-  const [selectedYear, setSelectedYear] = useState<string>(globalYear || "2025");
+  const { selectedYear, setSelectedYear } = useYear();
   const [selectedReportType, setSelectedReportType] = useState<ReportType>("executive");
   const [benchmarkCountry, setBenchmarkCountry] = useState<string>("USA");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
 
-  // Synchronize with Global Year Provider if needed
+  // Synchronize with Global Year Provider
   const handleYearChange = (year: string) => {
-    setSelectedYear(year);
-    if (setGlobalYear && ["2022", "2023", "2024", "2025"].includes(year)) {
-      setGlobalYear(year as any);
+    if (["2022", "2023", "2024", "2025"].includes(year)) {
+      setSelectedYear(year as any);
     }
   };
 

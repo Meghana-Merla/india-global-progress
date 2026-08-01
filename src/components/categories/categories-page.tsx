@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { CategoriesHeader } from "./categories-header";
 import { CategoryGrid } from "./category-grid";
@@ -11,7 +12,164 @@ import { CATEGORIES_MOCK_DATA, CategoryDetailData, getCategoryIcon } from "./cat
 import { Layers, Database, Sparkles, SlidersHorizontal } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+interface IndicatorMapping {
+  categoryId: string;
+  indicatorId?: string;
+  nameKeywords: string[];
+}
+
+const INDICATOR_MAP: Record<string, IndicatorMapping> = {
+  "gdp": {
+    categoryId: "economy",
+    indicatorId: "ind-ec-1",
+    nameKeywords: ["gdp", "nominal gdp"],
+  },
+  "gdp-growth": {
+    categoryId: "economy",
+    indicatorId: "ind-ec-2",
+    nameKeywords: ["gdp growth", "real gdp"],
+  },
+  "gdp-per-capita": {
+    categoryId: "economy",
+    indicatorId: "ind-ec-1",
+    nameKeywords: ["gdp", "per capita"],
+  },
+  "inflation": {
+    categoryId: "economy",
+    indicatorId: "ind-ec-5",
+    nameKeywords: ["inflation"],
+  },
+  "unemployment": {
+    categoryId: "economy",
+    indicatorId: "ind-ec-2",
+    nameKeywords: ["unemployment", "labor"],
+  },
+  "hdi": {
+    categoryId: "society",
+    indicatorId: "ind-so-1",
+    nameKeywords: ["hdi", "human development"],
+  },
+  "happiness": {
+    categoryId: "society",
+    indicatorId: "ind-so-4",
+    nameKeywords: ["happiness"],
+  },
+  "gii": {
+    categoryId: "technology",
+    indicatorId: "ind-tc-1",
+    nameKeywords: ["global innovation index", "gii"],
+  },
+  "ai-readiness": {
+    categoryId: "technology",
+    indicatorId: "ind-tc-2",
+    nameKeywords: ["ai readiness", "government ai"],
+  },
+  "healthcare-index": {
+    categoryId: "healthcare",
+    indicatorId: "ind-hc-1",
+    nameKeywords: ["health", "uhc", "universal health"],
+  },
+  "education-index": {
+    categoryId: "education",
+    indicatorId: "ind-ed-1",
+    nameKeywords: ["education", "stem"],
+  },
+  "cybersecurity": {
+    categoryId: "safety",
+    indicatorId: "ind-sf-1",
+    nameKeywords: ["cybersecurity", "gci"],
+  },
+  "global-peace": {
+    categoryId: "safety",
+    indicatorId: "ind-sf-2",
+    nameKeywords: ["peace", "public safety"],
+  },
+  "press-freedom": {
+    categoryId: "governance",
+    indicatorId: "ind-gv-3",
+    nameKeywords: ["rule of law", "press"],
+  },
+  "internet-penetration": {
+    categoryId: "digital-government",
+    indicatorId: "ind-dg-2",
+    nameKeywords: ["dpi", "internet", "infrastructure"],
+  },
+  "gender-gap": {
+    categoryId: "equality",
+    indicatorId: "ind-eq-2",
+    nameKeywords: ["gender gap", "gender"],
+  },
+  "climate-change": {
+    categoryId: "environment",
+    indicatorId: "ind-en-2",
+    nameKeywords: ["climate change", "ccpi"],
+  },
+  "air-quality": {
+    categoryId: "environment",
+    indicatorId: "ind-en-4",
+    nameKeywords: ["air quality", "pm2.5"],
+  },
+};
+
+function resolveParams(
+  categoryParam: string | null,
+  indicatorParam: string | null
+): {
+  category: CategoryDetailData | null;
+  indicatorId: string | null;
+} {
+  if (categoryParam) {
+    const foundCat = CATEGORIES_MOCK_DATA.find(
+      (c) => c.id.toLowerCase() === categoryParam.toLowerCase()
+    );
+    if (foundCat) {
+      return { category: foundCat, indicatorId: null };
+    }
+  }
+
+  if (indicatorParam) {
+    const slug = indicatorParam.toLowerCase();
+    const mapped = INDICATOR_MAP[slug];
+
+    if (mapped) {
+      const cat = CATEGORIES_MOCK_DATA.find((c) => c.id === mapped.categoryId);
+      if (cat) {
+        let targetIndId = mapped.indicatorId;
+        if (!targetIndId && mapped.nameKeywords.length > 0) {
+          const match = cat.indicators.find((ind) =>
+            mapped.nameKeywords.some((kw) => ind.name.toLowerCase().includes(kw))
+          );
+          if (match) targetIndId = match.id;
+        }
+        if (!targetIndId && cat.indicators.length > 0) {
+          targetIndId = cat.indicators[0].id;
+        }
+        return { category: cat, indicatorId: targetIndId || null };
+      }
+    }
+
+    const normalizedSlug = slug.replaceAll("-", " ");
+    for (const cat of CATEGORIES_MOCK_DATA) {
+      const matchedInd = cat.indicators.find(
+        (ind) =>
+          ind.id.toLowerCase() === slug ||
+          ind.name.toLowerCase().includes(normalizedSlug) ||
+          normalizedSlug.split(" ").some((w) => w.length > 2 && ind.name.toLowerCase().includes(w))
+      );
+      if (matchedInd) {
+        return { category: cat, indicatorId: matchedInd.id };
+      }
+    }
+  }
+
+  return { category: null, indicatorId: null };
+}
+
 export function CategoriesPage() {
+  const searchParams = useSearchParams();
+  const categoryParam = searchParams.get("category");
+  const indicatorParam = searchParams.get("indicator");
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedYear, setSelectedYear] = useState("2025");
   const [sortBy, setSortBy] = useState("score-desc");
@@ -25,6 +183,39 @@ export function CategoriesPage() {
   // Drawer state
   const [drawerCategory, setDrawerCategory] = useState<CategoryDetailData | null>(null);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [highlightedIndicatorId, setHighlightedIndicatorId] = useState<string | null>(null);
+
+  // Read URL search params and sync active category / drawer / indicator highlight
+  useEffect(() => {
+    if (!categoryParam && !indicatorParam) return;
+
+    const resolved = resolveParams(categoryParam, indicatorParam);
+
+    if (resolved.category) {
+      setActiveCategory(resolved.category);
+
+      if (categoryParam && !indicatorParam) {
+        setDrawerCategory(resolved.category);
+        setIsDrawerOpen(true);
+        setHighlightedIndicatorId(null);
+      } else if (indicatorParam) {
+        setDrawerCategory(resolved.category);
+        setIsDrawerOpen(true);
+        setHighlightedIndicatorId(resolved.indicatorId);
+
+        setTimeout(() => {
+          const rowEl = resolved.indicatorId
+            ? document.getElementById(`indicator-row-${resolved.indicatorId}`)
+            : null;
+          const tableEl = document.getElementById("indicator-explorer-table");
+          const targetEl = rowEl || tableEl;
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: "smooth", block: "center" });
+          }
+        }, 200);
+      }
+    }
+  }, [categoryParam, indicatorParam]);
 
   // Reset filters
   const handleResetFilters = () => {
@@ -149,7 +340,10 @@ export function CategoriesPage() {
               return (
                 <button
                   key={cat.id}
-                  onClick={() => setActiveCategory(cat)}
+                  onClick={() => {
+                    setActiveCategory(cat);
+                    setHighlightedIndicatorId(null);
+                  }}
                   className={cn(
                     "px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 shrink-0 cursor-pointer border",
                     isActive
@@ -172,6 +366,7 @@ export function CategoriesPage() {
         <IndicatorTable
           indicators={activeCategory.indicators}
           categoryTitle={activeCategory.title}
+          highlightedIndicatorId={highlightedIndicatorId}
         />
       </section>
 
@@ -180,6 +375,7 @@ export function CategoriesPage() {
         category={drawerCategory}
         isOpen={isDrawerOpen}
         onClose={() => setIsDrawerOpen(false)}
+        highlightedIndicatorId={highlightedIndicatorId}
       />
     </motion.div>
   );

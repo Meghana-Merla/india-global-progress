@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { AIInsightCards } from "./ai-insight-cards";
 import { AIChatInterface } from "./ai-chat-interface";
 import { Sparkles, Brain, MessageSquare, FileText, Calendar } from "lucide-react";
@@ -8,9 +9,19 @@ import { cn } from "@/lib/utils";
 import { useYear } from "@/providers";
 
 export function AIInsightsPage() {
+  const searchParams = useSearchParams();
+  const promptParam = searchParams.get("prompt");
   const { selectedYear, setSelectedYear, availableYears } = useYear();
-  const [selectedPrompt, setSelectedPrompt] = useState<string | null>(null);
+  const [selectedPrompt, setSelectedPrompt] = useState<string | null>(promptParam);
   const [activeTab, setActiveTab] = useState<"chat" | "cards">("chat");
+
+  useEffect(() => {
+    if (promptParam) {
+      setSelectedPrompt(promptParam);
+      setActiveTab("chat");
+    }
+  }, [promptParam]);
+
 
   const handlePromptClick = (promptText: string) => {
     setSelectedPrompt(promptText);

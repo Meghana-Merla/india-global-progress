@@ -7,6 +7,7 @@ import { CategoryGrid } from "./category-grid";
 import { RecentHighlights } from "./recent-highlights";
 import { useYear } from "@/providers";
 import { getDashboardData } from "@/data/mock";
+import { exportDashboardPDF } from "@/lib/dashboard-pdf-export";
 import { Brain, ArrowUpRight } from "lucide-react";
 import Link from "next/link";
 
@@ -19,7 +20,7 @@ export function DashboardPage() {
   };
 
   const handleExport = () => {
-    console.log(`Exporting IndiaLens AI report for ${selectedYear}...`);
+    exportDashboardPDF(selectedYear, data);
   };
 
   return (

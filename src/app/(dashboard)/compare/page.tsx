@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import { AppShell, PageContainer } from "@/components/layouts";
 import { ComparePage } from "@/components/compare";
 import { Metadata } from "next";
@@ -12,7 +12,9 @@ export default function CompareRoute() {
   return (
     <AppShell>
       <PageContainer>
-        <ComparePage />
+        <Suspense fallback={<div className="p-8 text-center text-muted-foreground font-semibold">Loading Compare...</div>}>
+          <ComparePage />
+        </Suspense>
       </PageContainer>
     </AppShell>
   );

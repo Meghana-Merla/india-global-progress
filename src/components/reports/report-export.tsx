@@ -1,3 +1,4 @@
+import { jsPDF } from "jspdf";
 import { GeneratedReport } from "./report-data";
 
 /**
@@ -96,7 +97,7 @@ export function exportReportCSV(report: GeneratedReport) {
   link.setAttribute("href", url);
   link.setAttribute(
     "download",
-    `IndiaLens_${report.type.toUpperCase()}_Report_${report.year}.csv`
+    `IndiaLensAI_Report_${report.year}.csv`
   );
   document.body.appendChild(link);
   link.click();
@@ -105,293 +106,252 @@ export function exportReportCSV(report: GeneratedReport) {
 }
 
 /**
- * Utility function to generate a printable PDF view for any GeneratedReport
+ * Utility function to generate and download a professional PDF document using jsPDF
  */
 export function exportReportPDF(report: GeneratedReport) {
-  const printWindow = window.open("", "_blank");
-  if (!printWindow) {
-    alert("Please allow popups to export the PDF report.");
-    return;
+  try {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    let y = 20;
+
+    // Header Title Banner
+    doc.setFillColor(30, 58, 138); // Deep Navy
+    doc.rect(0, 0, pageWidth, 28, "F");
+
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(16);
+    doc.text("IndiaLens AI — Intelligence Report", margin, 14);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.text("Global Progress & International Benchmark Platform", margin, 21);
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(9);
+    doc.text(`YEAR: ${report.year}`, pageWidth - margin - 25, 14);
+    doc.text(`DATE: ${report.generatedAt}`, pageWidth - margin - 35, 21);
+
+    y = 36;
+
+    // Report Title
+    doc.setTextColor(15, 23, 42);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(13);
+    doc.text(report.title, margin, y);
+    y += 6;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(100, 116, 139);
+    const subtitleLines = doc.splitTextToSize(report.subtitle, pageWidth - margin * 2);
+    doc.text(subtitleLines, margin, y);
+    y += subtitleLines.length * 4 + 4;
+
+    // Metadata Bar
+    doc.setFillColor(248, 250, 252);
+    doc.setDrawColor(226, 232, 240);
+    doc.rect(margin, y, pageWidth - margin * 2, 10, "FD");
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8);
+    doc.setTextColor(30, 58, 138);
+    doc.text(`TYPE: ${report.type.toUpperCase()}`, margin + 4, y + 6.5);
+    doc.text(`BENCHMARK PEER: ${report.benchmarkCountry}`, margin + 60, y + 6.5);
+    doc.text(`EVALUATION YEAR: ${report.year}`, margin + 125, y + 6.5);
+    y += 16;
+
+    // 1. Executive Summary
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text("1. Executive Summary", margin, y);
+    y += 5;
+
+    doc.setFillColor(240, 249, 255);
+    doc.setDrawColor(186, 230, 253);
+    const summaryLines = doc.splitTextToSize(report.executiveSummary, pageWidth - margin * 2 - 8);
+    const summaryBoxHeight = Math.max(14, summaryLines.length * 4 + 6);
+
+    doc.rect(margin, y, pageWidth - margin * 2, summaryBoxHeight, "FD");
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8);
+    doc.setTextColor(3, 105, 161);
+    doc.text(summaryLines, margin + 4, y + 5);
+    y += summaryBoxHeight + 8;
+
+    const checkOverflow = (neededHeight: number) => {
+      if (y + neededHeight > pageHeight - 15) {
+        doc.addPage();
+        y = 20;
+      }
+    };
+
+    // 2. Key Strategic Indicators Table
+    checkOverflow(35);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text("2. Key Strategic Indicators", margin, y);
+    y += 5;
+
+    doc.setFillColor(241, 245, 249);
+    doc.rect(margin, y, pageWidth - margin * 2, 6, "F");
+    doc.setFontSize(7.5);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(51, 65, 85);
+    doc.text("Indicator", margin + 3, y + 4.5);
+    doc.text("Category", margin + 55, y + 4.5);
+    doc.text("Global Rank", margin + 95, y + 4.5);
+    doc.text("Score", margin + 130, y + 4.5);
+    doc.text("Source", margin + 155, y + 4.5);
+    y += 7;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+
+    report.keyIndicators.slice(0, 6).forEach((ind) => {
+      checkOverflow(6);
+      doc.text(ind.name.slice(0, 28), margin + 3, y + 4);
+      doc.text(ind.category.slice(0, 20), margin + 55, y + 4);
+      doc.setFont("helvetica", "bold");
+      doc.text(ind.globalRank, margin + 95, y + 4);
+      doc.setFont("helvetica", "normal");
+      doc.text(String(ind.score), margin + 130, y + 4);
+      doc.text(ind.source.slice(0, 18), margin + 155, y + 4);
+      doc.setDrawColor(241, 245, 249);
+      doc.line(margin, y + 5.5, pageWidth - margin, y + 5.5);
+      y += 6;
+    });
+
+    y += 5;
+
+    // 3. Category Performance Scores Table
+    checkOverflow(35);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text("3. Category Performance Scores", margin, y);
+    y += 5;
+
+    doc.setFillColor(241, 245, 249);
+    doc.rect(margin, y, pageWidth - margin * 2, 6, "F");
+    doc.setFontSize(7.5);
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(51, 65, 85);
+    doc.text("Category", margin + 3, y + 4.5);
+    doc.text("Overall Score", margin + 65, y + 4.5);
+    doc.text("Global Rank", margin + 110, y + 4.5);
+    doc.text("Top Peer", margin + 150, y + 4.5);
+    y += 7;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+
+    report.categoryPerformance.forEach((cat) => {
+      checkOverflow(6);
+      doc.text(cat.name, margin + 3, y + 4);
+      doc.text(`${cat.score} / 100`, margin + 65, y + 4);
+      doc.setFont("helvetica", "bold");
+      doc.text(cat.globalRank, margin + 110, y + 4);
+      doc.setFont("helvetica", "normal");
+      doc.text(cat.topPeer, margin + 150, y + 4);
+      doc.setDrawColor(241, 245, 249);
+      doc.line(margin, y + 5.5, pageWidth - margin, y + 5.5);
+      y += 6;
+    });
+
+    y += 5;
+
+    // 4. Strategic Strengths & Improvement Areas
+    checkOverflow(30);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text("4. Key Strategic Insights", margin, y);
+    y += 5;
+
+    doc.setFontSize(8.5);
+    doc.setTextColor(22, 101, 52);
+    doc.text("Top Strengths:", margin, y);
+    y += 4.5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+    report.strengths.forEach((str) => {
+      checkOverflow(5);
+      const lines = doc.splitTextToSize(`• ${str}`, pageWidth - margin * 2);
+      doc.text(lines, margin + 3, y);
+      y += lines.length * 3.8;
+    });
+
+    y += 3;
+    checkOverflow(20);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(8.5);
+    doc.setTextColor(153, 27, 27);
+    doc.text("Priority Improvement Areas:", margin, y);
+    y += 4.5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(15, 23, 42);
+    report.areasForImprovement.forEach((area) => {
+      checkOverflow(5);
+      const lines = doc.splitTextToSize(`• ${area}`, pageWidth - margin * 2);
+      doc.text(lines, margin + 3, y);
+      y += lines.length * 3.8;
+    });
+
+    y += 5;
+
+    // 5. AI Recommendations
+    checkOverflow(25);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(10.5);
+    doc.setTextColor(15, 23, 42);
+    doc.text("5. Gemini AI Executive Recommendations", margin, y);
+    y += 5;
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(7.5);
+    doc.setTextColor(126, 34, 206);
+    report.aiRecommendations.forEach((rec, idx) => {
+      checkOverflow(5);
+      const lines = doc.splitTextToSize(`${idx + 1}. ${rec}`, pageWidth - margin * 2);
+      doc.text(lines, margin + 3, y);
+      y += lines.length * 3.8 + 1.5;
+    });
+
+    // Document Footer
+    const pageCount = (doc.internal as any).getNumberOfPages();
+    for (let i = 1; i <= pageCount; i++) {
+      doc.setPage(i);
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(7);
+      doc.setTextColor(148, 163, 184);
+      doc.line(margin, pageHeight - 10, pageWidth - margin, pageHeight - 10);
+      doc.text(
+        `IndiaLens AI Platform • Confidential Official Benchmark Data • Generated ${report.generatedAt}`,
+        margin,
+        pageHeight - 6
+      );
+      doc.text(`Page ${i} of ${pageCount}`, pageWidth - margin - 15, pageHeight - 6);
+    }
+
+    doc.save(`IndiaLensAI_Report_${report.year}.pdf`);
+  } catch (e) {
+    console.error("jsPDF generation error:", e);
   }
-
-  const htmlContent = `
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-      <meta charset="UTF-8">
-      <title>${report.title} - IndiaLens AI Report</title>
-      <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap');
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body {
-          font-family: 'Inter', system-ui, -apple-system, sans-serif;
-          color: #0f172a;
-          background: #ffffff;
-          padding: 40px;
-          line-height: 1.5;
-          font-size: 13px;
-        }
-        .header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          border-b: 3px solid #3b82f6;
-          padding-bottom: 20px;
-          margin-bottom: 25px;
-        }
-        .logo {
-          font-size: 22px;
-          font-weight: 800;
-          color: #1e3a8a;
-          letter-spacing: -0.5px;
-        }
-        .badge {
-          background: #eff6ff;
-          color: #2563eb;
-          border: 1px solid #bfdbfe;
-          padding: 4px 12px;
-          border-radius: 20px;
-          font-weight: 700;
-          font-size: 11px;
-          text-transform: uppercase;
-        }
-        .meta-bar {
-          display: flex;
-          gap: 20px;
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
-          padding: 12px 18px;
-          border-radius: 10px;
-          margin-bottom: 25px;
-          font-size: 12px;
-        }
-        .meta-item { display: flex; flex-direction: column; }
-        .meta-label { font-size: 10px; color: #64748b; font-weight: 700; text-transform: uppercase; }
-        .meta-val { font-weight: 700; color: #0f172a; }
-        .section-title {
-          font-size: 16px;
-          font-weight: 800;
-          color: #1e293b;
-          border-left: 4px solid #3b82f6;
-          padding-left: 10px;
-          margin-top: 25px;
-          margin-bottom: 12px;
-        }
-        .summary-box {
-          background: #f0f9ff;
-          border: 1px solid #bae6fd;
-          padding: 16px;
-          border-radius: 10px;
-          font-size: 13px;
-          color: #0369a1;
-          margin-bottom: 20px;
-        }
-        table {
-          width: 100%;
-          border-collapse: collapse;
-          margin-bottom: 20px;
-          font-size: 12px;
-        }
-        th, td {
-          padding: 10px 12px;
-          text-align: left;
-          border-bottom: 1px solid #e2e8f0;
-        }
-        th {
-          background: #f1f5f9;
-          font-weight: 700;
-          color: #334155;
-          text-transform: uppercase;
-          font-size: 10px;
-        }
-        tr:nth-child(even) { background: #fafafa; }
-        .list-grid {
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-          gap: 15px;
-          margin-bottom: 20px;
-        }
-        .card-box {
-          border: 1px solid #e2e8f0;
-          border-radius: 10px;
-          padding: 15px;
-          background: #ffffff;
-        }
-        .card-box-title {
-          font-weight: 700;
-          font-size: 13px;
-          margin-bottom: 8px;
-        }
-        .card-box-title.green { color: #166534; }
-        .card-box-title.red { color: #991b1b; }
-        ul { padding-left: 18px; font-size: 12px; }
-        li { margin-bottom: 6px; }
-        .ai-box {
-          background: #faf5ff;
-          border: 1px solid #e9d5ff;
-          padding: 16px;
-          border-radius: 10px;
-          margin-bottom: 20px;
-        }
-        .ai-title {
-          color: #7e22ce;
-          font-weight: 800;
-          font-size: 13px;
-          margin-bottom: 8px;
-        }
-        .footer {
-          margin-top: 40px;
-          border-t: 2px solid #e2e8f0;
-          padding-top: 15px;
-          display: flex;
-          justify-content: space-between;
-          font-size: 11px;
-          color: #64748b;
-        }
-        @media print {
-          body { padding: 20px; }
-          .no-print { display: none; }
-        }
-      </style>
-    </head>
-    <body>
-      <div className="header">
-        <div>
-          <div className="logo">IndiaLens AI</div>
-          <div style="font-size: 11px; color: #64748b; font-weight: 600;">Global Intelligence & Benchmark Platform</div>
-        </div>
-        <span className="badge">${report.type.toUpperCase()} REPORT</span>
-      </div>
-
-      <h1 style="font-size: 20px; font-weight: 800; margin-bottom: 5px; color: #0f172a;">${report.title}</h1>
-      <p style="font-size: 13px; color: #475569; margin-bottom: 20px;">${report.subtitle}</p>
-
-      <div className="meta-bar">
-        <div className="meta-item">
-          <span className="meta-label">Evaluation Year</span>
-          <span className="meta-val">${report.year}</span>
-        </div>
-        <div className="meta-item">
-          <span className="meta-label">Report Type</span>
-          <span className="meta-val">${report.type.toUpperCase()}</span>
-        </div>
-        <div className="meta-item">
-          <span className="meta-label">Benchmark Peer</span>
-          <span className="meta-val">${report.benchmarkCountry}</span>
-        </div>
-        <div className="meta-item">
-          <span className="meta-label">Generated Date</span>
-          <span className="meta-val">${report.generatedAt}</span>
-        </div>
-      </div>
-
-      <div className="section-title">Executive Summary</div>
-      <div className="summary-box">
-        ${report.executiveSummary}
-      </div>
-
-      <div className="section-title">Key Strategic Indicators</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Indicator</th>
-            <th>Category</th>
-            <th>Global Rank</th>
-            <th>Score</th>
-            <th>Change</th>
-            <th>Source</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${report.keyIndicators
-            .map(
-              (ind) => `
-            <tr>
-              <td><strong>${ind.name}</strong></td>
-              <td>${ind.category}</td>
-              <td><strong>${ind.globalRank}</strong></td>
-              <td>${ind.score}</td>
-              <td style="color: ${ind.status === "improved" ? "#16a34a" : "#dc2626"}; font-weight: bold;">${ind.change}</td>
-              <td>${ind.source}</td>
-            </tr>
-          `
-            )
-            .join("")}
-        </tbody>
-      </table>
-
-      <div className="section-title">Category Performance</div>
-      <table>
-        <thead>
-          <tr>
-            <th>Category</th>
-            <th>Overall Score</th>
-            <th>Global Rank</th>
-            <th>Top Global Peer</th>
-            <th>Performance Gap</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${report.categoryPerformance
-            .map(
-              (cat) => `
-            <tr>
-              <td><strong>${cat.name}</strong></td>
-              <td>${cat.score} / 100</td>
-              <td><strong>${cat.globalRank}</strong></td>
-              <td>${cat.topPeer}</td>
-              <td>${cat.gap}</td>
-            </tr>
-          `
-            )
-            .join("")}
-        </tbody>
-      </table>
-
-      <div className="list-grid">
-        <div className="card-box">
-          <div className="card-box-title green">Key Strategic Strengths</div>
-          <ul>
-            ${report.strengths.map((s) => `<li>${s}</li>`).join("")}
-          </ul>
-        </div>
-
-        <div className="card-box">
-          <div className="card-box-title red">Areas for Improvement</div>
-          <ul>
-            ${report.areasForImprovement.map((a) => `<li>${a}</li>`).join("")}
-          </ul>
-        </div>
-      </div>
-
-      <div className="section-title">AI Strategic Recommendations</div>
-      <div className="ai-box">
-        <div className="ai-title">Gemini 2.5 Flash Actionable Priorities</div>
-        <ul>
-          ${report.aiRecommendations.map((r) => `<li>${r}</li>`).join("")}
-        </ul>
-      </div>
-
-      <div className="section-title">Data Sources & Citations</div>
-      <ul>
-        ${report.dataSources.map((src) => `<li>${src}</li>`).join("")}
-      </ul>
-
-      <div className="footer">
-        <div>Official Intelligence Document • Generated by <strong>IndiaLens AI</strong></div>
-        <div>Confidential Benchmark Data</div>
-      </div>
-
-      <script>
-        window.onload = function() {
-          window.print();
-        };
-      </script>
-    </body>
-    </html>
-  `;
-
-  printWindow.document.open();
-  printWindow.document.write(htmlContent);
-  printWindow.document.close();
 }
+

@@ -8,6 +8,7 @@ import { CommandItem } from "./command-items";
 import {
   Search,
   LayoutDashboard,
+  Layers,
   ArrowLeftRight,
   Globe,
   Brain,
@@ -26,15 +27,20 @@ import {
   MapPin,
   BarChart3,
   FileText,
+  Database,
+  Smile,
+  Lock,
   X,
   History,
   CornerDownLeft,
   LucideIcon,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useYear } from "@/providers";
 
 const iconMap: Record<string, LucideIcon> = {
   LayoutDashboard,
+  Layers,
   ArrowLeftRight,
   Globe,
   Brain,
@@ -53,12 +59,189 @@ const iconMap: Record<string, LucideIcon> = {
   MapPin,
   BarChart3,
   FileText,
+  Database,
+  Smile,
+  Lock,
 };
 
 const RECENT_SEARCHES_KEY = "indialens_recent_searches";
 
+import { generateReportData } from "@/components/reports/report-data";
+import { exportReportPDF } from "@/components/reports/report-export";
+
+function parseQueryIntent(query: string): string | null {
+  const q = query.trim().toLowerCase();
+  if (!q) return null;
+
+  // 1. Explain Intent (e.g. "Explain HDI", "Explain GDP", "Explain AI Readiness", "Explain Happiness Index", "Explain Innovation")
+  if (q.startsWith("explain ") || q.startsWith("explain")) {
+    return `/ai-insights?prompt=${encodeURIComponent(query.trim())}`;
+  }
+
+  // 2. Report Export Intent
+  if (q === "export report" || q === "download report" || q === "pdf report" || q === "generate report") {
+    return "action:export-report";
+  }
+
+  // 3. Comparison Intent (e.g. "Compare India and China", "Compare India with USA", "India vs Germany", "Japan vs India", "Singapore comparison", "China comparison")
+  if (
+    q.includes("compare") ||
+    q.includes(" vs ") ||
+    q.includes(" vs. ") ||
+    q.includes("versus") ||
+    q.includes("comparison")
+  ) {
+    const COUNTRY_ALIASES: Array<{ code: string; names: string[] }> = [
+      { code: "IND", names: ["india", "ind", "bharat"] },
+      { code: "USA", names: ["united states", "usa", "america", "us"] },
+      { code: "CHN", names: ["china", "chn", "beijing"] },
+      { code: "DEU", names: ["germany", "deu", "berlin"] },
+      { code: "JPN", names: ["japan", "jpn", "tokyo"] },
+      { code: "GBR", names: ["united kingdom", "uk", "gbr", "britain"] },
+      { code: "SGP", names: ["singapore", "sgp"] },
+      { code: "BRA", names: ["brazil", "bra"] },
+      { code: "AUS", names: ["australia", "aus"] },
+      { code: "FRA", names: ["france", "fra"] },
+      { code: "ARE", names: ["united arab emirates", "uae", "are", "dubai"] },
+    ];
+
+    const matches: Array<{ code: string; index: number }> = [];
+    for (const c of COUNTRY_ALIASES) {
+      for (const name of c.names) {
+        const idx = q.indexOf(name);
+        if (idx !== -1) {
+          if (!matches.some((m) => m.code === c.code)) {
+            matches.push({ code: c.code, index: idx });
+          }
+          break;
+        }
+      }
+    }
+    matches.sort((a, b) => a.index - b.index);
+    const foundCodes = matches.map((m) => m.code);
+
+    if (foundCodes.length >= 2) {
+      return `/compare?c1=${foundCodes[0]}&c2=${foundCodes[1]}`;
+    } else if (foundCodes.length === 1) {
+      const c1 = "IND";
+      const c2 = foundCodes[0] === "IND" ? "USA" : foundCodes[0];
+      return `/compare?c1=${c1}&c2=${c2}`;
+    } else {
+      return `/compare`;
+    }
+  }
+
+  // 4. Country Intent (e.g. "India", "USA", "United States", "China", "Japan", "Germany", "France", "Brazil", "Singapore", "UAE", "Australia")
+  const COUNTRY_EXACT_MAP: Record<string, string> = {
+    india: "IND",
+    ind: "IND",
+    bharat: "IND",
+    "united states": "USA",
+    usa: "USA",
+    america: "USA",
+    us: "USA",
+    china: "CHN",
+    chn: "CHN",
+    germany: "DEU",
+    deu: "DEU",
+    japan: "JPN",
+    jpn: "JPN",
+    "united kingdom": "GBR",
+    uk: "GBR",
+    gbr: "GBR",
+    britain: "GBR",
+    singapore: "SGP",
+    sgp: "SGP",
+    brazil: "BRA",
+    bra: "BRA",
+    australia: "AUS",
+    aus: "AUS",
+    france: "FRA",
+    fra: "FRA",
+    "united arab emirates": "ARE",
+    uae: "ARE",
+    are: "ARE",
+  };
+
+  if (COUNTRY_EXACT_MAP[q]) {
+    return `/world-map?country=${COUNTRY_EXACT_MAP[q]}`;
+  }
+
+  // 5. Category Intent (e.g. "Economy", "Technology", "Healthcare", "Governance", "Education", "Environment", "Safety", "Equality", "Digital Government")
+  const CATEGORY_EXACT_MAP: Record<string, string> = {
+    economy: "economy",
+    eco: "economy",
+    society: "society",
+    soc: "society",
+    governance: "governance",
+    gov: "governance",
+    technology: "technology",
+    tech: "technology",
+    "tech & ai": "technology",
+    education: "education",
+    edu: "education",
+    healthcare: "healthcare",
+    health: "healthcare",
+    environment: "environment",
+    env: "environment",
+    safety: "safety",
+    equality: "equality",
+    eq: "equality",
+    "digital government": "digital-government",
+    "digital-government": "digital-government",
+    "digital gov": "digital-government",
+  };
+
+  if (CATEGORY_EXACT_MAP[q]) {
+    return `/categories?category=${CATEGORY_EXACT_MAP[q]}`;
+  }
+
+  // 6. Indicator Intent (e.g. "GDP", "HDI", "AI Readiness", "Innovation", "Healthcare Index", "Inflation", "GII", "Cybersecurity", "Peace", "Happiness", "Climate Change", "Air Quality")
+  const INDICATOR_EXACT_MAP: Record<string, string> = {
+    gdp: "gdp",
+    "gdp growth": "gdp-growth",
+    "gdp per capita": "gdp-per-capita",
+    hdi: "hdi",
+    "human development index": "hdi",
+    "ai readiness": "ai-readiness",
+    ai: "ai-readiness",
+    innovation: "gii",
+    gii: "gii",
+    "global innovation index": "gii",
+    healthcare: "healthcare-index",
+    "healthcare index": "healthcare-index",
+    inflation: "inflation",
+    unemployment: "unemployment",
+    cybersecurity: "cybersecurity",
+    peace: "global-peace",
+    "global peace": "global-peace",
+    happiness: "happiness",
+    "happiness index": "happiness",
+    "gender gap": "gender-gap",
+    "climate change": "climate-change",
+    "air quality": "air-quality",
+  };
+
+  if (INDICATOR_EXACT_MAP[q]) {
+    return `/categories?indicator=${INDICATOR_EXACT_MAP[q]}`;
+  }
+
+  // 7. General Page Names
+  if (q === "world map" || q === "map") return "/world-map";
+  if (q === "ai insights" || q === "ai") return "/ai-insights";
+  if (q === "reports" || q === "report") return "/reports";
+  if (q === "categories" || q === "category") return "/categories";
+  if (q === "compare" || q === "comparison") return "/compare";
+  if (q === "trends" || q === "trend") return "/trends";
+  if (q === "sources" || q === "data sources") return "/sources";
+  if (q === "dashboard" || q === "home") return "/dashboard";
+
+  return null;
+}
+
 export function CommandPalette() {
   const router = useRouter();
+  const { selectedYear } = useYear();
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -139,6 +322,23 @@ export function CommandPalette() {
 
   // Execute selected command or query
   const handleExecuteItem = (item?: CommandItem) => {
+    if (query.trim()) {
+      const intentTarget = parseQueryIntent(query.trim());
+      if (intentTarget) {
+        saveRecentSearch(query.trim());
+        setIsOpen(false);
+        if (intentTarget === "action:export-report") {
+          setExportNotice("Generating professional PDF report...");
+          const report = generateReportData("executive", selectedYear, "USA");
+          exportReportPDF(report);
+          setTimeout(() => setExportNotice(null), 2500);
+        } else {
+          router.push(intentTarget);
+        }
+        return;
+      }
+    }
+
     const targetItem = item || filteredItems[selectedIndex];
 
     if (!targetItem && query.trim()) {
@@ -152,10 +352,12 @@ export function CommandPalette() {
       } else if (q.includes("world map") || q.includes("map")) {
         router.push("/world-map");
       } else if (q.includes("report")) {
-        setExportNotice("Exporting multi-year intelligence report...");
+        setExportNotice("Generating professional PDF report...");
+        const report = generateReportData("executive", selectedYear, "USA");
+        exportReportPDF(report);
         setTimeout(() => setExportNotice(null), 2500);
       } else {
-        router.push(`/ai-insights`);
+        router.push(`/ai-insights?prompt=${encodeURIComponent(query.trim())}`);
       }
       return;
     }
@@ -168,14 +370,17 @@ export function CommandPalette() {
     if (targetItem.action.type === "navigate") {
       router.push(targetItem.action.target);
     } else if (targetItem.action.type === "ai-prompt") {
-      router.push(`/ai-insights`);
+      router.push(`/ai-insights?prompt=${encodeURIComponent(targetItem.action.target)}`);
     } else if (targetItem.action.type === "custom-action") {
       if (targetItem.action.target === "export-report") {
-        setExportNotice("Exporting multi-year intelligence report...");
+        setExportNotice("Generating professional PDF report...");
+        const report = generateReportData("executive", selectedYear, "USA");
+        exportReportPDF(report);
         setTimeout(() => setExportNotice(null), 2500);
       }
     }
   };
+
 
   // Keyboard navigation within list
   const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {

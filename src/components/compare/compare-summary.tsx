@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 export interface CompareSummaryProps {
   country1: CountryData;
   country2: CountryData;
+  onOpenDrawer?: (id: string) => void;
 }
 
-export function CompareSummary({ country1, country2 }: CompareSummaryProps) {
+export function CompareSummary({ country1, country2, onOpenDrawer }: CompareSummaryProps) {
   const metricKeys = [
     { key: "gdpRank", label: "GDP Rank" },
     { key: "hdi", label: "HDI Score" },
@@ -84,8 +85,9 @@ export function CompareSummary({ country1, country2 }: CompareSummaryProps) {
               <div className="grid grid-cols-2 gap-2 text-center pt-1">
                 {/* Country 1 Value */}
                 <div
+                  onClick={() => onOpenDrawer?.(country1.id)}
                   className={cn(
-                    "p-2.5 rounded-xl border transition-all",
+                    "p-2.5 rounded-xl border transition-all cursor-pointer hover:scale-[1.02]",
                     winner === "c1"
                       ? "bg-primary/10 border-primary/40 ring-1 ring-primary/30"
                       : "bg-card/60 border-border/40"
@@ -108,8 +110,9 @@ export function CompareSummary({ country1, country2 }: CompareSummaryProps) {
 
                 {/* Country 2 Value */}
                 <div
+                  onClick={() => onOpenDrawer?.(country2.id)}
                   className={cn(
-                    "p-2.5 rounded-xl border transition-all",
+                    "p-2.5 rounded-xl border transition-all cursor-pointer hover:scale-[1.02]",
                     winner === "c2"
                       ? "bg-indigo-500/10 border-indigo-500/40 ring-1 ring-indigo-500/30"
                       : "bg-card/60 border-border/40"

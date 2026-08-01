@@ -309,7 +309,7 @@ export function ReportPreview({
 
         <div className="p-5 rounded-2xl bg-card/90 border border-border/60 shadow-xs space-y-3">
           <h4 className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
-            Multi-Year Progress Trajectory (2020–2025)
+            Multi-Year Progress Trajectory (2020–{report.year})
           </h4>
           <div className="w-full h-[200px]">
             <ResponsiveContainer width="100%" height="100%">

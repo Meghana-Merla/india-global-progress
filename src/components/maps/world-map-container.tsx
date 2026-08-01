@@ -1,6 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import dynamic from "next/dynamic";
 import { getWorldMapData, MapCountryData } from "@/data/mock";
 import { useYear } from "@/providers";
@@ -25,12 +26,33 @@ const LeafletMap = dynamic(
 );
 
 export function WorldMapContainer() {
+  const searchParams = useSearchParams();
+  const countryParam = searchParams.get("country");
+
   const { selectedYear } = useYear();
   const worldMapCountries = getWorldMapData(selectedYear);
 
   const [selectedCountry, setSelectedCountry] = useState<MapCountryData | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [targetCoords, setTargetCoords] = useState<[number, number] | null>(null);
+
+  useEffect(() => {
+    if (countryParam) {
+      const q = countryParam.trim().toLowerCase();
+      const matched = worldMapCountries.find(
+        (c) =>
+          c.id.toLowerCase() === q ||
+          c.code.toLowerCase() === q ||
+          (c.slug && c.slug.toLowerCase() === q) ||
+          c.name.toLowerCase() === q ||
+          c.name.toLowerCase().includes(q)
+      );
+      if (matched) {
+        setSelectedCountry(matched);
+        setTargetCoords(matched.coords);
+      }
+    }
+  }, [countryParam, worldMapCountries]);
 
   const filteredCountries = worldMapCountries.filter((c) =>
     c.name.toLowerCase().includes(searchQuery.toLowerCase()) ||

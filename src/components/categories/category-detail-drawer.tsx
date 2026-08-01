@@ -23,12 +23,14 @@ export interface CategoryDetailDrawerProps {
   category: CategoryDetailData | null;
   isOpen: boolean;
   onClose: () => void;
+  highlightedIndicatorId?: string | null;
 }
 
 export function CategoryDetailDrawer({
   category,
   isOpen,
   onClose,
+  highlightedIndicatorId,
 }: CategoryDetailDrawerProps) {
   // Lock body scroll when drawer is open
   useEffect(() => {
@@ -41,6 +43,33 @@ export function CategoryDetailDrawer({
       document.body.style.overflow = "unset";
     };
   }, [isOpen]);
+
+  // ESC key listener to close drawer
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape" && isOpen) {
+        onClose();
+      }
+    };
+    if (isOpen) {
+      window.addEventListener("keydown", handleKeyDown);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [isOpen, onClose]);
+
+  // Scroll highlighted indicator into view when drawer opens
+  useEffect(() => {
+    if (isOpen && highlightedIndicatorId) {
+      setTimeout(() => {
+        const el = document.getElementById(`drawer-indicator-${highlightedIndicatorId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 300);
+    }
+  }, [isOpen, highlightedIndicatorId]);
 
   if (!category) return null;
 
@@ -56,7 +85,7 @@ export function CategoryDetailDrawer({
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-background/80 backdrop-blur-md transition-opacity"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-md transition-opacity"
           />
 
           {/* Right Slide-Over Panel */}
@@ -67,22 +96,22 @@ export function CategoryDetailDrawer({
             transition={{ type: "spring", damping: 25, stiffness: 250 }}
             className="fixed inset-y-0 right-0 z-50 w-full max-w-2xl bg-card border-l border-border/60 shadow-2xl flex flex-col justify-between overflow-hidden"
           >
-            {/* Drawer Header */}
-            <div className="p-6 border-b border-border/40 flex items-center justify-between gap-4 bg-background/50 backdrop-blur-sm shrink-0">
+            {/* Drawer Header Bar */}
+            <div className="p-5 border-b border-border/40 flex items-center justify-between gap-4 bg-background/80 backdrop-blur-md shrink-0">
               <div className="flex items-center gap-3">
                 <div
                   className={cn(
-                    "w-12 h-12 rounded-xl bg-gradient-to-br p-0.5 shadow-sm shrink-0",
+                    "w-10 h-10 rounded-xl bg-gradient-to-br p-0.5 shadow-sm shrink-0",
                     category.gradient
                   )}
                 >
                   <div className="w-full h-full rounded-[10px] bg-background/90 flex items-center justify-center">
-                    <IconComponent className="w-6 h-6 text-foreground" />
+                    <IconComponent className="w-5 h-5 text-foreground" />
                   </div>
                 </div>
 
                 <div>
-                  <h2 className="text-xl font-extrabold text-foreground tracking-tight">
+                  <h2 className="text-lg font-extrabold text-foreground tracking-tight">
                     {category.title}
                   </h2>
                   <span className="text-xs font-semibold text-muted-foreground flex items-center gap-1.5 mt-0.5">
@@ -95,7 +124,7 @@ export function CategoryDetailDrawer({
               <button
                 onClick={onClose}
                 className="p-2 rounded-xl bg-secondary text-muted-foreground hover:text-foreground hover:bg-secondary/80 transition-all cursor-pointer"
-                title="Close drawer"
+                title="Close drawer (ESC)"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -103,7 +132,36 @@ export function CategoryDetailDrawer({
 
             {/* Scrollable Content Body */}
             <div className="flex-1 overflow-y-auto p-6 space-y-6">
-              {/* Overview & Key KPI Banner */}
+              {/* 1. Category Header Hero Block: Large Icon, Category Name, Short Description */}
+              <div className="p-5 rounded-2xl bg-gradient-to-br from-primary/10 via-secondary/40 to-background border border-border/60 space-y-3 shadow-xs">
+                <div className="flex items-center gap-4">
+                  <div
+                    className={cn(
+                      "w-14 h-14 rounded-2xl bg-gradient-to-br p-0.5 shadow-md shrink-0 flex items-center justify-center",
+                      category.gradient
+                    )}
+                  >
+                    <div className="w-full h-full rounded-[14px] bg-background/90 flex items-center justify-center">
+                      <IconComponent className="w-7 h-7 text-primary" />
+                    </div>
+                  </div>
+
+                  <div>
+                    <h2 className="text-2xl font-extrabold text-foreground tracking-tight">
+                      {category.title}
+                    </h2>
+                    <span className="text-xs font-bold px-2.5 py-0.5 rounded-full bg-primary/10 text-primary border border-primary/20 inline-block mt-1">
+                      Pillar Category
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs sm:text-sm text-foreground/90 font-medium leading-relaxed">
+                  {category.shortDescription}
+                </p>
+              </div>
+
+              {/* 2. Overview & Key KPI Banner */}
               <div className="grid grid-cols-2 gap-4 p-4 rounded-2xl bg-background/60 border border-border/50">
                 <div className="space-y-1">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
@@ -127,7 +185,7 @@ export function CategoryDetailDrawer({
                 </div>
               </div>
 
-              {/* Category Overview Paragraph */}
+              {/* 3. Category Overview Paragraph */}
               <div className="space-y-2">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   Category Overview
@@ -137,7 +195,7 @@ export function CategoryDetailDrawer({
                 </p>
               </div>
 
-              {/* Strengths & Areas for Improvement */}
+              {/* 4. Strengths & Areas for Improvement */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 {/* Strengths */}
                 <div className="p-4 rounded-2xl bg-emerald-500/5 border border-emerald-500/20 space-y-3">
@@ -170,43 +228,74 @@ export function CategoryDetailDrawer({
                 </div>
               </div>
 
-              {/* Top Indicators Preview */}
+              {/* 5. Indicators List */}
               <div className="space-y-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center justify-between">
-                  <span>Top Category Indicators ({category.indicators.length})</span>
+                  <span>Category Indicators ({category.indicators.length})</span>
                 </h3>
 
                 <div className="space-y-2">
-                  {category.indicators.map((ind) => (
-                    <div
-                      key={ind.id}
-                      className="p-3 rounded-xl bg-background/50 border border-border/40 flex items-center justify-between text-xs gap-3"
-                    >
-                      <div className="flex-1 truncate">
-                        <span className="font-semibold text-foreground block truncate">
-                          {ind.name}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">
-                          {ind.source} ({ind.year})
-                        </span>
-                      </div>
+                  {category.indicators.map((ind) => {
+                    const isHighlighted =
+                      highlightedIndicatorId === ind.id ||
+                      (highlightedIndicatorId &&
+                        (ind.name.toLowerCase().includes(highlightedIndicatorId.toLowerCase()) ||
+                          ind.id.toLowerCase().includes(highlightedIndicatorId.toLowerCase())));
 
-                      <div className="flex items-center gap-3 shrink-0 text-right">
-                        <div>
-                          <span className="font-bold text-foreground block">
-                            #{ind.rank}
-                          </span>
+                    return (
+                      <div
+                        key={ind.id}
+                        id={`drawer-indicator-${ind.id}`}
+                        className={cn(
+                          "p-3.5 rounded-xl transition-all duration-300 flex items-center justify-between text-xs gap-3",
+                          isHighlighted
+                            ? "bg-amber-500/15 border-2 border-amber-500 shadow-[0_0_15px_rgba(245,158,11,0.35)] ring-2 ring-amber-500/40"
+                            : "bg-background/50 border border-border/40"
+                        )}
+                      >
+                        <div className="flex-1 truncate">
+                          <div className="flex items-center gap-2">
+                            <span
+                              className={cn(
+                                "font-bold truncate",
+                                isHighlighted ? "text-amber-400 text-sm" : "text-foreground"
+                              )}
+                            >
+                              {ind.name}
+                            </span>
+                            {isHighlighted && (
+                              <span className="px-2 py-0.5 text-[9px] font-extrabold uppercase rounded-full bg-amber-500 text-black shadow-xs animate-pulse">
+                                Selected
+                              </span>
+                            )}
+                          </div>
                           <span className="text-[10px] text-muted-foreground">
-                            Score: {ind.score}
+                            {ind.source} ({ind.year})
                           </span>
                         </div>
+
+                        <div className="flex items-center gap-3 shrink-0 text-right">
+                          <div>
+                            <span
+                              className={cn(
+                                "font-extrabold block",
+                                isHighlighted ? "text-amber-400" : "text-foreground"
+                              )}
+                            >
+                              #{ind.rank}
+                            </span>
+                            <span className="text-[10px] text-muted-foreground font-semibold">
+                              Score: {ind.score}
+                            </span>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* Countries Ahead & Behind */}
+              {/* 6. Countries Ahead & Behind */}
               <div className="space-y-3">
                 <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1.5">
                   <Globe className="w-4 h-4 text-primary" /> Benchmark Peer Countries
@@ -251,12 +340,12 @@ export function CategoryDetailDrawer({
                 </div>
               </div>
 
-              {/* AI Summary Box */}
+              {/* 7. AI Summary Box */}
               <CategoryAISummary category={category} />
             </div>
 
             {/* Drawer Footer */}
-            <div className="p-4 border-t border-border/40 bg-background/50 backdrop-blur-sm flex items-center justify-between gap-3 shrink-0">
+            <div className="p-4 border-t border-border/40 bg-background/80 backdrop-blur-md flex items-center justify-between gap-3 shrink-0">
               <span className="text-xs text-muted-foreground font-medium">
                 IndiaLens AI Data Transparency Verified
               </span>

@@ -16,8 +16,11 @@ export interface AIChatResponse {
 }
 
 export type AIPromptCategory =
-  | "dashboard-summary"
-  | "country-comparison"
+  | "summary"
+  | "comparison"
   | "indicator-explanation"
+  | "country-analysis"
   | "policy-recommendation"
+  | "trend-analysis"
   | "general-chat";
+

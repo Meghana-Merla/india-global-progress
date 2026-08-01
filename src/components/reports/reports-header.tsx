@@ -105,7 +105,7 @@ export function ReportsHeader({
             className="flex-1 bg-card text-foreground text-xs font-bold py-1.5 px-2.5 rounded-lg border border-border/80 hover:border-primary focus:outline-none focus:ring-1 focus:ring-primary transition-all cursor-pointer"
             aria-label="Select Report Year"
           >
-            {["2025", "2024", "2023", "2022", "2021", "2020"].map((y) => (
+            {["2025", "2024", "2023", "2022"].map((y) => (
               <option key={y} value={y}>
                 {y} Edition
               </option>

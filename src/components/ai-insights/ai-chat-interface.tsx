@@ -29,6 +29,8 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
   const [isTyping, setIsTyping] = useState(false);
   const chatEndRef = useRef<HTMLDivElement>(null);
 
+  const processedPromptRef = useRef<string | null>(null);
+
   const scrollToBottom = () => {
     chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -38,10 +40,12 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
   }, [messages, isTyping]);
 
   useEffect(() => {
-    if (onSelectPrompt) {
+    if (onSelectPrompt && processedPromptRef.current !== onSelectPrompt) {
+      processedPromptRef.current = onSelectPrompt;
       handleSendMessage(onSelectPrompt);
     }
   }, [onSelectPrompt]);
+
 
   const handleSendMessage = async (textToSend?: string) => {
     const text = (textToSend || inputValue).trim();

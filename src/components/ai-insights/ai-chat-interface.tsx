@@ -27,12 +27,17 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
   ]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
 
   const processedPromptRef = useRef<string | null>(null);
 
   const scrollToBottom = () => {
-    chatEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   useEffect(() => {
@@ -228,7 +233,7 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
       </div>
 
       {/* Chat Messages Feed */}
-      <div className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4">
+      <div ref={messagesContainerRef} className="flex-1 p-4 sm:p-5 overflow-y-auto space-y-4">
         {messages.map((msg) => {
           const isUser = msg.role === "user";
 
@@ -308,8 +313,6 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
             </div>
           </motion.div>
         )}
-
-        <div ref={chatEndRef} />
       </div>
 
       {/* Input Box Form */}

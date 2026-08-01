@@ -1,5 +1,6 @@
 import {
   LucideIcon,
+  Home,
   LayoutDashboard,
   Layers,
   GitCompare,
@@ -19,6 +20,7 @@ export interface NavItem {
 }
 
 export const navigationItems: NavItem[] = [
+  { title: "Home", href: "/", icon: Home },
   { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
   { title: "Categories", href: "/categories", icon: Layers },
   { title: "Compare", href: "/compare", icon: GitCompare },

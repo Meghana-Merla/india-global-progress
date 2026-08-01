@@ -116,23 +116,15 @@ export function MobileMenu({
             <div className="pt-6 border-t border-border/40 flex flex-col gap-4">
               <div className="flex items-center justify-around gap-2">
                 <button
+                  onClick={() => {
+                    onClose();
+                    window.dispatchEvent(new CustomEvent("open-command-palette"));
+                  }}
                   className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted/60 text-xs font-medium text-foreground hover:bg-muted transition-colors flex-1 justify-center"
                   aria-label="Search"
                 >
                   <Search className="w-4 h-4 text-primary" />
                   <span>Search</span>
-                </button>
-
-                <button
-                  onClick={onToggleTheme}
-                  className="p-2.5 rounded-xl bg-muted/60 text-foreground hover:bg-muted transition-colors"
-                  aria-label="Toggle theme"
-                >
-                  {theme === "dark" ? (
-                    <Sun className="w-4 h-4 text-amber-400" />
-                  ) : (
-                    <Moon className="w-4 h-4 text-slate-700" />
-                  )}
                 </button>
 
                 <a

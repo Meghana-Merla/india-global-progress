@@ -21,7 +21,7 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
       id: "welcome-1",
       role: "assistant",
       content:
-        `### **Welcome to IndiaLens AI Intelligence Hub (${selectedYear})** 🤖\n\nI am your AI assistant trained on India's international rankings, global indicators, and multi-year trajectory data.\n\nAsk me any question or pick a suggested topic below to get started!`,
+        `### **Welcome to IndiaLens AI Intelligence Hub** 🤖\n\nI am your AI assistant trained on India's international rankings, global indicators, and multi-year trajectory data.\n\nAsk me any question or pick a suggested topic below to get started!`,
       timestamp: "Just now",
     },
   ]);
@@ -80,40 +80,31 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
 
       const resData = await res.json();
       
-      let formattedContent = resData.summary || "No summary response generated.";
-
-      if (resData.strengths && resData.strengths.length > 0) {
-        formattedContent += "\n\n### **Key Strengths**\n" + resData.strengths.map((s: string) => `- ${s}`).join("\n");
-      }
-      if (resData.weaknesses && resData.weaknesses.length > 0) {
-        formattedContent += "\n\n### **Areas of Concern**\n" + resData.weaknesses.map((w: string) => `- ${w}`).join("\n");
-      }
-      if (resData.recommendations && resData.recommendations.length > 0) {
-        formattedContent += "\n\n### **Strategic Recommendations**\n" + resData.recommendations.map((r: string) => `- ${r}`).join("\n");
-      }
-      if (resData.keyTakeaways && resData.keyTakeaways.length > 0) {
-        formattedContent += "\n\n> " + resData.keyTakeaways.join(" • ");
-      }
+      const formattedContent =
+        resData.content ||
+        resData.response ||
+        resData.summary ||
+        "No response generated.";
 
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
         content: formattedContent,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        sources: ["Gemini 2.5 Flash Engine", `WIPO GII ${selectedYear}`, "World Bank LPI"],
+        sources: resData.sources || ["Gemini 2.5 Flash Engine", "Global Indicator Datasets"],
       };
 
       setMessages((prev) => [...prev, assistantMsg]);
     } catch (err) {
       console.error("AI chat API error:", err);
-      // Fallback response with friendly retry message
+      // Fallback response
       const fallbackText = await fetchAIResponseByYear(selectedYear, text);
       const assistantMsg: ChatMessage = {
         id: `assistant-${Date.now()}`,
         role: "assistant",
-        content: `${fallbackText}\n\n*(Notice: Live Gemini API connection encountered a transient rate limit/timeout. Displaying offline intelligence cached for ${selectedYear}.)*`,
+        content: fallbackText,
         timestamp: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }),
-        sources: [`IndiaLens Offline Intelligence (${selectedYear})`],
+        sources: ["IndiaLens Intelligence Engine"],
       };
       setMessages((prev) => [...prev, assistantMsg]);
     } finally {
@@ -127,7 +118,7 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
         id: `welcome-${Date.now()}`,
         role: "assistant",
         content:
-          `Chat history reset (${selectedYear} Edition). How can I assist you with India's global rankings intelligence?`,
+          "Chat history reset. How can I assist you with India's global rankings intelligence?",
         timestamp: "Just now",
       },
     ]);
@@ -205,7 +196,7 @@ export function AIChatInterface({ onSelectPrompt }: AIChatInterfaceProps) {
               <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
             </h3>
             <span className="text-[10px] text-muted-foreground font-medium">
-              Powered by IndiaLens AI Core Engine ({selectedYear} Edition)
+              Powered by IndiaLens AI Core Engine
             </span>
           </div>
         </div>

@@ -96,11 +96,11 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
       </div>
 
       {/* Right Section: Action Icons */}
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-2.5">
         {/* Command Palette Trigger Button */}
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
-          className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-secondary/60 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all text-xs font-medium cursor-pointer"
+          className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-secondary/60 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all text-xs font-medium cursor-pointer shadow-xs"
           aria-label="Open Command Palette (Ctrl+K)"
           title="Open Command Palette (Ctrl+K)"
         >
@@ -109,19 +109,6 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
           <kbd className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-background border border-border/80 text-muted-foreground shadow-xs">
             ⌘K
           </kbd>
-        </button>
-
-        {/* Theme Toggle Button */}
-        <button
-          onClick={handleToggleTheme}
-          className="p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none"
-          aria-label="Toggle theme"
-        >
-          {mounted && theme === "dark" ? (
-            <Sun className="w-4 h-4 text-amber-400" />
-          ) : (
-            <Moon className="w-4 h-4 text-slate-700" />
-          )}
         </button>
 
         {/* GitHub Link Button */}

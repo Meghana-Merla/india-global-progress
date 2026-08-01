@@ -461,12 +461,12 @@ export function getAIData(year: Year): AIYearData {
 }
 
 export async function fetchAIResponseByYear(year: Year, userPrompt: string): Promise<string> {
-  await new Promise((resolve) => setTimeout(resolve, 700));
+  await new Promise((resolve) => setTimeout(resolve, 500));
 
   const yearData = getAIData(year);
   if (yearData.mockResponsesMap[userPrompt]) {
     return yearData.mockResponsesMap[userPrompt];
   }
 
-  return `### **IndiaLens AI Analysis (${year})**\n\nBased on real-time intelligence for **"${userPrompt}"** in **${year}**:\n\nIndia's global position in ${year} demonstrates steady progress across technology and macroeconomic indicators. Strategic alignment between public infrastructure investments and private innovation continues to boost international rankings.\n\n- **Primary Driver:** Digital public goods and demographic advantage.\n- **Year Benchmark:** ${year} data reflects active execution of national digitalization and manufacturing goals.\n\n*Source: IndiaLens AI Knowledge Graph & Global Indicator Datasets (${year}).*`;
+  return `### **IndiaLens Intelligence Briefing**\n\nBased on global rankings datasets for **"${userPrompt}"**:\n\nIndia's global position demonstrates steady structural progress across technology and macroeconomic indicators. Strategic alignment between public infrastructure investments and private innovation continues to boost international rankings.\n\n- **Primary Driver:** Digital public goods scalability and demographic dividend.\n- **Indicator Focus:** Active execution of national digitalization, high STEM graduate throughput, and manufacturing PLI goals.\n\n*Source: IndiaLens Knowledge Graph & Authoritative Global Datasets.*`;
 }

@@ -1,5 +1,6 @@
 import React from "react";
 import { Navbar } from "@/components/common/navbar";
+import { Footer } from "@/components/common/footer";
 import { CommandPalette } from "@/components/common/command-palette";
 import { cn } from "@/lib/utils";
 
@@ -32,22 +33,7 @@ export function AppShell({
       </main>
 
       {/* Footer Container */}
-      <footer className="w-full border-t border-border/40 bg-background/60 backdrop-blur-sm py-8 relative z-10 mt-auto">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          {footerContent ? (
-            footerContent
-          ) : (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs sm:text-sm text-muted-foreground">
-              <div className="flex items-center gap-2">
-                <span className="font-bold text-foreground tracking-tight">IndiaLens <span className="text-primary">AI</span></span>
-                <span className="text-muted-foreground/60">•</span>
-                <span>AI-powered Global Intelligence Dashboard</span>
-              </div>
-              <p className="text-xs">© {new Date().getFullYear()} IndiaLens AI. All rights reserved.</p>
-            </div>
-          )}
-        </div>
-      </footer>
+      {footerContent ? footerContent : <Footer />}
 
       {/* Global AI Command Palette Modal */}
       <CommandPalette />

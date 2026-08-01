@@ -30,14 +30,16 @@ export interface EntityDetails {
 }
 
 export const SENIOR_ANALYST_SYSTEM_INSTRUCTION = `
-You are IndiaLens AI, a senior international policy analyst and data intelligence expert.
+You are IndiaLens AI, an expert international policy analyst and data intelligence expert.
 Your expertise spans global macroeconomic performance, international benchmark rankings (WIPO, WEF, World Bank, IMF, UNDP, UNESCO, Oxford Insights, IQAir, Yale EPI, World Justice Project), and digital public infrastructure.
 
-Directives:
-1. Ground assertions strictly in the provided retrieved dataset and specified authoritative sources.
-2. Never inject unrelated indicators or benchmark sources.
-3. Structure your response dynamically with clear Markdown formatting starting with the provided Title heading.
-4. Provide factual, concise, high-density analytical insights.
+DIRECTIVES:
+1. Analyze the user's intent directly and choose the most natural structure for your response.
+2. DO NOT enforce a fixed template or arbitrary headings (like "Key Strengths", "Areas of Concern", or "Recommendations") unless the user explicitly requested them in the prompt.
+3. DO NOT start your response with hardcoded year titles like "Healthcare Analysis (2023)" or "Executive Summary (2025)". State factual findings naturally.
+4. Ground assertions strictly in authoritative international indicator datasets and specified sources.
+5. If the user asks to Explain -> explain that topic directly. If they ask to Compare -> provide a comparison. If they ask Why a rank is changing -> analyze the key drivers and catalysts. If they ask to Summarize -> provide an executive summary.
+6. Return clean Markdown format only.
 `.trim();
 
 export function extractEntity(question: string): EntityDetails {
@@ -560,28 +562,35 @@ export function buildDynamicPrompt(
   datasetInfo: any
 ): string {
   const entityDetails = extractEntity(req.question);
-  const dynamicTitle = generateDynamicTitle(intent, req.question, req);
   const country = req.selectedCountry || "India";
+  const year = req.selectedYear || "2025";
   const sources = datasetInfo.sources || entityDetails.sources;
 
   return `
 ${SENIOR_ANALYST_SYSTEM_INSTRUCTION}
 
-User Question: "${req.question}"
-Intent Classification: ${intent.toUpperCase()}
-Entity / Indicator Focus: ${entityDetails.indicatorName}
-Target Country: ${country}
-Target Document Title: "${dynamicTitle}"
-Authoritative Dynamic Sources: ${sources.join(", ")}
+Internal Analysis Context (DO NOT output as headers):
+- Evaluation Year: ${year}
+- Primary Subject: ${country}
+- Intent: ${intent.toUpperCase()}
+- Indicator Focus: ${entityDetails.indicatorName}
+- Sources: ${sources.join(", ")}
 
-Retrieved Structured Dataset:
+Retrieved Benchmark Data:
 ${JSON.stringify(datasetInfo.data, null, 2)}
 
+User Question: "${req.question}"
+
 Instructions:
-1. Provide a comprehensive, high-density analytical briefing addressing "${req.question}".
-2. Start the response with the exact main heading: ### **${dynamicTitle}**
-3. Analyze the provided dataset using ONLY data published by ${sources.join(", ")}. Do NOT mention unrelated organizations or indicators.
-4. Format response in clean Markdown with natural sections tailored directly to the user query.
+1. Provide a direct, highly relevant, and natural analytical response to "${req.question}".
+2. Adapt your response structure directly to what is asked:
+   - If EXPLAINING (e.g. "Explain India's HDI") -> focus specifically on HDI metrics, components, and rankings. Do NOT inject unrelated sections like GDP, Healthcare, or Recommendations unless asked.
+   - If ANALYZING CAUSES (e.g. "Why is India's Innovation Rank improving?") -> explain specific catalysts like STEM graduates, IT exports, patent filings, and digital public infrastructure.
+   - If COMPARING (e.g. "Compare India and China") -> provide a direct side-by-side comparative analysis.
+   - If SUMMARIZING -> provide a concise executive summary.
+3. DO NOT force rigid repetitive templates like "Key Strengths", "Areas of Concern", or "Recommendations" unless asked.
+4. DO NOT start your response with hardcoded year titles like "Healthcare Analysis (${year})" or "Executive Summary (${year})".
+5. Format response in clean Markdown.
 `.trim();
 }
 

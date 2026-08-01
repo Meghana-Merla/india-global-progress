@@ -34,7 +34,7 @@ export function AIInsightsPage() {
       <div className="space-y-2 text-center max-w-3xl mx-auto">
         <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 text-xs font-bold uppercase tracking-wider">
           <Sparkles className="w-3.5 h-3.5" />
-          <span>IndiaLens AI Intelligence Hub ({selectedYear})</span>
+          <span>IndiaLens AI Intelligence Hub</span>
         </div>
         <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-foreground">
           AI <span className="text-gradient-primary">Insights</span>

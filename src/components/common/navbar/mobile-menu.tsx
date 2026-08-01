@@ -81,11 +81,11 @@ export function MobileMenu({
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 220 }}
-            className="fixed top-0 left-0 bottom-0 z-50 w-full max-w-[300px] sm:max-w-xs bg-background/95 backdrop-blur-2xl border-r border-border/60 shadow-2xl p-5 flex flex-col justify-between overflow-y-auto lg:hidden"
+            className="fixed top-0 left-0 bottom-0 z-50 w-full max-w-[280px] sm:max-w-xs bg-background/95 backdrop-blur-2xl border-r border-border shadow-2xl p-5 flex flex-col justify-between overflow-y-auto lg:hidden"
           >
             {/* Sidebar Header */}
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-border/40">
+              <div className="flex items-center justify-between pb-4 border-b border-border/60">
                 <Logo onClick={onClose} />
                 <button
                   onClick={onClose}
@@ -111,9 +111,9 @@ export function MobileMenu({
                       href={item.href}
                       onClick={onClose}
                       className={cn(
-                        "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200 select-none",
+                        "flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 select-none",
                         isActive
-                          ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-xs"
+                          ? "bg-primary/10 text-primary font-bold border-l-2 border-primary shadow-xs"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                       )}
                     >
@@ -133,14 +133,14 @@ export function MobileMenu({
             </div>
 
             {/* Sidebar Footer Actions */}
-            <div className="pt-4 border-t border-border/40 flex flex-col gap-3">
-              <div className="flex items-center gap-2">
+            <div className="pt-4 border-t border-border/60 flex flex-col gap-3">
+              <div className="flex items-center justify-between gap-2">
                 <button
                   onClick={() => {
                     onClose();
                     window.dispatchEvent(new CustomEvent("open-command-palette"));
                   }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-xl bg-muted/60 text-xs font-semibold text-foreground hover:bg-muted transition-colors flex-1 justify-center cursor-pointer"
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg bg-secondary text-xs font-semibold text-foreground hover:bg-secondary/80 transition-colors flex-1 justify-center cursor-pointer border border-border"
                   aria-label="Search"
                 >
                   <Search className="w-4 h-4 text-primary" />
@@ -150,7 +150,7 @@ export function MobileMenu({
                 {onToggleTheme && (
                   <button
                     onClick={onToggleTheme}
-                    className="p-2 rounded-xl bg-muted/60 text-foreground hover:bg-muted transition-colors cursor-pointer"
+                    className="p-2 rounded-lg bg-secondary text-foreground hover:bg-secondary/80 transition-colors cursor-pointer border border-border"
                     aria-label="Toggle Theme"
                     title="Toggle Theme"
                   >
@@ -166,12 +166,17 @@ export function MobileMenu({
                   href="https://github.com/Meghana-Merla/india-global-progress"
                   target="_blank"
                   rel="noreferrer"
-                  className="p-2 rounded-xl bg-muted/60 text-foreground hover:bg-muted transition-colors"
+                  className="p-2 rounded-lg bg-secondary text-foreground hover:bg-secondary/80 transition-colors border border-border"
                   aria-label="GitHub Repository"
                   title="GitHub Repository"
                 >
                   <GithubIcon className="w-4 h-4" />
                 </a>
+              </div>
+
+              {/* Version Footer */}
+              <div className="text-[10px] text-center text-muted-foreground font-mono pt-1">
+                v1.0.0 • Sovereign Intelligence
               </div>
             </div>
           </motion.div>

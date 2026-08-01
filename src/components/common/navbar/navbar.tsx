@@ -6,6 +6,8 @@ import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Sun, Moon, ChevronDown } from "lucide-react";
+import { Menu } from "lucide-react";
+import { MobileMenu } from "./mobile-menu";
 import { NavItem, navigationItems } from "./nav-links";
 import { Logo } from "./logo";
 import { cn } from "@/lib/utils";
@@ -37,6 +39,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -60,6 +63,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
   );
 
   return (
+    <>
     <nav
       className={cn(
         "w-full h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto gap-4",
@@ -209,7 +213,24 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
         >
           <GithubIcon className="w-4 h-4" />
         </a>
+        <button
+  onClick={() => setMobileMenuOpen(true)}
+  className="lg:hidden p-2 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors"
+  aria-label="Open Menu"
+>
+  <Menu className="w-5 h-5" />
+</button>
       </div>
-    </nav>
+        </nav>
+          <MobileMenu
+        isOpen={mobileMenuOpen}
+        onClose={() => setMobileMenuOpen(false)}
+        activePathname={pathname}
+        items={navigationItems}
+        theme={currentTheme}
+        onToggleTheme={handleToggleTheme}
+      />
+      </>
+
   );
 }

@@ -28,18 +28,18 @@ export function HeroActions({
       {/* Primary CTA */}
       <Link
         href={primaryHref}
-        className="inline-flex items-center justify-center w-full sm:w-auto h-12 px-7 rounded-full bg-gradient-primary text-white font-semibold shadow-glow hover:scale-[1.02] hover:shadow-lg transition-all duration-300 gap-2 group select-none"
+        className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-6 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium shadow-sm hover:shadow-purple-500/20 transition-all duration-200 gap-2 group select-none"
       >
         <span>{primaryText}</span>
-        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-200" />
+        <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
       </Link>
 
       {/* Secondary CTA */}
       <Link
         href={secondaryHref}
-        className="inline-flex items-center justify-center w-full sm:w-auto h-12 px-7 rounded-full border border-border/80 bg-background/60 backdrop-blur-md text-foreground font-semibold hover:bg-secondary hover:border-primary/40 hover:scale-[1.02] transition-all duration-300 gap-2 group select-none"
+        className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-6 rounded-lg border border-white/10 bg-zinc-900/80 text-slate-200 text-sm font-medium hover:bg-zinc-800 hover:border-white/20 transition-all duration-200 gap-2 group select-none"
       >
-        <GitCompare className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform duration-200" />
+        <GitCompare className="w-4 h-4 text-purple-400 group-hover:rotate-12 transition-transform duration-200" />
         <span>{secondaryText}</span>
       </Link>
     </motion.div>

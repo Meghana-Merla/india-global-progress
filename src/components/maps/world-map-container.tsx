@@ -174,8 +174,8 @@ export function WorldMapContainer() {
               <span className="w-2.5 h-2.5 rounded-full bg-[#F59E0B]" />
               <span>&lt; 75 Developing</span>
             </div>
-            <div className="col-span-2 pt-1 border-t border-border/40 flex items-center gap-1.5 text-primary font-bold">
-              <span className="w-3 h-3 rounded-full bg-[#F97316] ring-2 ring-orange-500/40" />
+            <div className="col-span-2 pt-1 border-t border-border/40 flex items-center gap-1.5 text-purple-400 font-bold">
+              <span className="w-3 h-3 rounded-full bg-[#7C3AED] ring-2 ring-purple-500/40" />
               <span>🇮🇳 India ({selectedYear})</span>
             </div>
           </div>

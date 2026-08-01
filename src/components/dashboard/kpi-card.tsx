@@ -56,14 +56,14 @@ export function KPICard({ card, onSelectCard }: KPICardProps) {
         animate: { opacity: 1, y: 0 },
       }}
       onClick={handleClick}
-      className="glass-card-hover p-5 relative overflow-hidden flex flex-col justify-between group cursor-pointer"
+      className="bg-zinc-900/80 border border-white/8 hover:border-purple-500/30 hover:bg-zinc-900 p-5 rounded-xl flex flex-col justify-between group cursor-pointer transition-all duration-200 shadow-sm"
     >
       {/* Top Header: Title & Source Badge */}
       <div className="flex items-center justify-between gap-2 mb-3">
-        <span className="text-xs font-semibold text-muted-foreground tracking-wide uppercase">
+        <span className="text-xs font-medium text-zinc-400">
           {card.title}
         </span>
-        <span className="text-[10px] font-medium text-muted-foreground/70 px-2 py-0.5 rounded-full bg-secondary/80 border border-border/50">
+        <span className="text-[10px] font-medium text-zinc-400 px-2 py-0.5 rounded-md bg-white/5 border border-white/5">
           {card.source}
         </span>
       </div>
@@ -71,21 +71,21 @@ export function KPICard({ card, onSelectCard }: KPICardProps) {
       {/* Center: Rank & Sparkline */}
       <div className="flex items-baseline justify-between gap-2 mb-3">
         <div>
-          <div className="text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground group-hover:text-primary transition-colors">
+          <div className="text-3xl font-semibold tracking-tight text-white group-hover:text-purple-400 transition-colors">
             {card.rank}
           </div>
-          <div className="text-xs font-medium text-muted-foreground mt-0.5">
+          <div className="text-xs font-normal text-zinc-400 mt-0.5">
             {card.score}
           </div>
         </div>
 
         {/* Small Sparkline SVG Placeholder */}
         <div className="flex flex-col items-end gap-1">
-          <svg width={width} height={height} className="overflow-visible opacity-80 group-hover:opacity-100 transition-opacity">
+          <svg width={width} height={height} className="overflow-visible opacity-70 group-hover:opacity-100 transition-opacity">
             <polyline
               fill="none"
-              stroke={isUp ? "#10B981" : isDown ? "#EF4444" : "#F59E0B"}
-              strokeWidth="2.5"
+              stroke={isUp ? "#22C55E" : isDown ? "#EF4444" : "#A855F7"}
+              strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               points={points}
@@ -95,14 +95,14 @@ export function KPICard({ card, onSelectCard }: KPICardProps) {
       </div>
 
       {/* Bottom: Trend Badge & Arrow */}
-      <div className="flex items-center justify-between pt-2 border-t border-border/30">
-        <span className="text-[11px] text-muted-foreground">Recent Trend</span>
+      <div className="flex items-center justify-between pt-3 border-t border-white/5">
+        <span className="text-[11px] text-zinc-400 font-normal">Recent Trend</span>
         <div
           className={cn(
-            "inline-flex items-center gap-1 text-xs font-bold px-2 py-0.5 rounded-full border shadow-2xs",
-            isUp && "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20",
-            isDown && "bg-rose-500/10 text-rose-600 dark:text-rose-400 border-rose-500/20",
-            !isUp && !isDown && "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20"
+            "inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-md border",
+            isUp && "bg-emerald-500/10 text-emerald-400 border-emerald-500/20",
+            isDown && "bg-rose-500/10 text-rose-400 border-rose-500/20",
+            !isUp && !isDown && "bg-purple-500/10 text-purple-300 border-purple-500/20"
           )}
         >
           {isUp && <TrendingUp className="w-3.5 h-3.5" />}

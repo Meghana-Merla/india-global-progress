@@ -35,7 +35,7 @@ export interface NavbarProps {
 
 export function Navbar({ items = navigationItems, className }: NavbarProps) {
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
@@ -44,8 +44,10 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
     setMounted(true);
   }, []);
 
+  const currentTheme = resolvedTheme || theme;
+
   const handleToggleTheme = () => {
-    setTheme(theme === "dark" ? "light" : "dark");
+    setTheme(currentTheme === "dark" ? "light" : "dark");
   };
 
   // Primary visible items on desktop
@@ -62,7 +64,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
   return (
     <nav
       className={cn(
-        "w-full h-[72px] flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-[1440px] mx-auto gap-4",
+        "w-full h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto gap-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40",
         className
       )}
     >
@@ -72,7 +74,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
       </div>
 
       {/* Center Navigation: Desktop Nav Pills */}
-      <div className="hidden lg:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner shrink-0">
+      <div className="hidden lg:flex items-center gap-1 bg-secondary/80 p-1 rounded-lg border border-border shrink-0">
         {primaryItems.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -83,22 +85,15 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
               key={item.title}
               href={item.href}
               className={cn(
-                "relative px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 flex items-center gap-1 select-none shrink-0",
+                "relative px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 flex items-center gap-1 select-none shrink-0",
                 isActive
-                  ? "text-primary font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/40"
+                  ? "text-primary bg-primary/10 shadow-xs border border-primary/20 font-semibold"
+                  : "text-muted-foreground hover:text-foreground hover:bg-background/60"
               )}
             >
-              {isActive && (
-                <motion.div
-                  layoutId="active-nav-pill"
-                  className="absolute inset-0 bg-background shadow-sm rounded-full border border-primary/20"
-                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
-                />
-              )}
               <span className="relative z-10">{item.title}</span>
               {item.badge && (
-                <span className="relative z-10 px-1.5 py-0.2 text-[9px] font-bold uppercase rounded-full bg-primary text-primary-foreground">
+                <span className="relative z-10 px-1.5 py-0.2 text-[9px] font-bold rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
                   {item.badge}
                 </span>
               )}
@@ -112,10 +107,10 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
             <button
               onClick={() => setMoreOpen((prev) => !prev)}
               className={cn(
-                "px-3 py-1.5 text-xs font-semibold rounded-full transition-all duration-200 flex items-center gap-1 cursor-pointer select-none shrink-0",
+                "px-3 py-1.5 text-xs font-medium rounded-md transition-all duration-150 flex items-center gap-1 cursor-pointer select-none shrink-0",
                 isMoreActive
-                  ? "bg-primary text-white shadow-xs font-bold"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/40"
+                  ? "bg-purple-600 text-white font-semibold"
+                  : "text-zinc-400 hover:text-zinc-100 hover:bg-white/5"
               )}
               aria-label="More navigation pages"
             >
@@ -197,7 +192,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
             aria-label="Toggle Theme"
             title="Toggle Theme"
           >
-            {theme === "dark" ? (
+            {currentTheme === "dark" ? (
               <Sun className="w-4 h-4 text-amber-400" />
             ) : (
               <Moon className="w-4 h-4 text-indigo-400" />

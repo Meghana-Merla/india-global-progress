@@ -154,7 +154,7 @@ export function MobileMenu({
                     aria-label="Toggle Theme"
                     title="Toggle Theme"
                   >
-                    {theme === "dark" ? (
+                    {theme === "dark" || theme === "system" ? (
                       <Sun className="w-4 h-4 text-amber-400" />
                     ) : (
                       <Moon className="w-4 h-4 text-indigo-400" />

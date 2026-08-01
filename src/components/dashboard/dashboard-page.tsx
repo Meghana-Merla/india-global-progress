@@ -118,7 +118,7 @@ export function DashboardPage() {
       <section className="pt-4 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-bold tracking-tight text-foreground flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-amber-500 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-purple-500 animate-pulse" />
             Recent Index Releases & News ({selectedYear})
           </h2>
         </div>

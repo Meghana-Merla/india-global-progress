@@ -29,7 +29,7 @@ export const categoriesData: CategoryItem[] = [
     count: "16 Indicators",
     description: "GDP growth, inflation, export value, ease of business & global trade metrics.",
     icon: TrendingUp,
-    gradient: "from-blue-500 to-indigo-600",
+    gradient: "from-blue-600 to-blue-700",
     href: "/categories/economy",
   },
   {
@@ -38,7 +38,7 @@ export const categoriesData: CategoryItem[] = [
     count: "12 Indicators",
     description: "Human development, demographic trends, quality of life & social wellbeing.",
     icon: Users,
-    gradient: "from-purple-500 to-violet-600",
+    gradient: "from-yellow-500 to-amber-600",
     href: "/categories/society",
   },
   {
@@ -47,7 +47,7 @@ export const categoriesData: CategoryItem[] = [
     count: "10 Indicators",
     description: "Rule of law, corruption perception, government effectiveness & democracy index.",
     icon: Building2,
-    gradient: "from-amber-500 to-orange-600",
+    gradient: "from-indigo-600 to-purple-700",
     href: "/categories/governance",
   },
   {
@@ -56,7 +56,7 @@ export const categoriesData: CategoryItem[] = [
     count: "15 Indicators",
     description: "R&D expenditure, AI readiness, patent applications & global innovation rank.",
     icon: Cpu,
-    gradient: "from-cyan-500 to-blue-600",
+    gradient: "from-purple-600 to-violet-600",
     href: "/categories/technology",
   },
   {
@@ -65,7 +65,7 @@ export const categoriesData: CategoryItem[] = [
     count: "11 Indicators",
     description: "Literacy rates, higher ed rankings, STEM graduates & educational index.",
     icon: GraduationCap,
-    gradient: "from-emerald-500 to-teal-600",
+    gradient: "from-cyan-600 to-teal-600",
     href: "/categories/education",
   },
   {
@@ -74,7 +74,7 @@ export const categoriesData: CategoryItem[] = [
     count: "13 Indicators",
     description: "Life expectancy, healthcare coverage, WHO global health security index.",
     icon: Activity,
-    gradient: "from-rose-500 to-pink-600",
+    gradient: "from-green-600 to-emerald-600",
     href: "/categories/healthcare",
   },
   {
@@ -83,7 +83,7 @@ export const categoriesData: CategoryItem[] = [
     count: "14 Indicators",
     description: "Renewable energy adoption, climate risk, air quality & forest coverage.",
     icon: Leaf,
-    gradient: "from-green-500 to-emerald-600",
+    gradient: "from-emerald-600 to-teal-700",
     href: "/categories/environment",
   },
   {
@@ -92,7 +92,7 @@ export const categoriesData: CategoryItem[] = [
     count: "9 Indicators",
     description: "Global peace index, cyber security readiness & public safety scores.",
     icon: ShieldCheck,
-    gradient: "from-sky-500 to-blue-700",
+    gradient: "from-red-600 to-rose-700",
     href: "/categories/safety",
   },
   {
@@ -101,7 +101,7 @@ export const categoriesData: CategoryItem[] = [
     count: "8 Indicators",
     description: "Gender parity index, income distribution & global social mobility rank.",
     icon: Scale,
-    gradient: "from-fuchsia-500 to-purple-600",
+    gradient: "from-purple-600 to-indigo-600",
     href: "/categories/equality",
   },
   {
@@ -110,7 +110,7 @@ export const categoriesData: CategoryItem[] = [
     count: "10 Indicators",
     description: "UN E-Government index, digital public infrastructure & online services.",
     icon: Laptop,
-    gradient: "from-indigo-500 to-blue-600",
+    gradient: "from-indigo-600 to-blue-600",
     href: "/categories/digital-government",
   },
 ];

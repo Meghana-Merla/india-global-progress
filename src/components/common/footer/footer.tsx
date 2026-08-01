@@ -197,9 +197,14 @@ export function Footer() {
                   Reports
                 </Link>
               </li>
-              <li className="col-span-2">
-                <Link href="/sources" className="text-muted-foreground hover:text-primary transition-colors">
-                  Data Sources
+              <li>
+                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                  About
+                </Link>
+              </li>
+              <li>
+                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -217,13 +222,13 @@ export function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/sources" className="text-muted-foreground hover:text-primary transition-colors">
-                  Data Sources
+                <Link href="/about" className="text-muted-foreground hover:text-primary transition-colors">
+                  About IndiaLens
                 </Link>
               </li>
               <li>
-                <Link href="/ai-insights" className="text-muted-foreground hover:text-primary transition-colors">
-                  AI Model Specs
+                <Link href="/sources" className="text-muted-foreground hover:text-primary transition-colors">
+                  Data Sources
                 </Link>
               </li>
               <li>
@@ -246,19 +251,19 @@ export function Footer() {
             </h4>
             <ul className="space-y-2 font-medium text-xs sm:text-sm">
               <li>
-                <a href="mailto:support@indialens.ai" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/contact" className="text-muted-foreground hover:text-primary transition-colors">
                   Contact Support
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="https://github.com/Meghana-Merla/india-global-progress/issues" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/contact?type=feedback" className="text-muted-foreground hover:text-primary transition-colors">
                   Feedback & Issues
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="https://github.com/Meghana-Merla/india-global-progress" target="_blank" rel="noreferrer" className="text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/contact?type=bug" className="text-muted-foreground hover:text-primary transition-colors">
                   Report Data Anomaly
-                </a>
+                </Link>
               </li>
             </ul>
 
@@ -277,16 +282,7 @@ export function Footer() {
                   <GithubIcon className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://twitter.com"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="w-9 h-9 rounded-xl bg-card border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/40 transition-all flex items-center justify-center"
-                  aria-label="Twitter"
-                >
-                  <TwitterIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/durga-naga-meghana-merla-9338b7320/"
                   target="_blank"
                   rel="noreferrer"
                   className="w-9 h-9 rounded-xl bg-card border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/40 transition-all flex items-center justify-center"
@@ -295,13 +291,11 @@ export function Footer() {
                   <LinkedinIcon className="w-4 h-4" />
                 </a>
                 <a
-                  href="https://discord.com"
-                  target="_blank"
-                  rel="noreferrer"
+                  href="mailto:meghana.merla@gmail.com"
                   className="w-9 h-9 rounded-xl bg-card border border-border/80 text-muted-foreground hover:text-primary hover:border-primary/40 transition-all flex items-center justify-center"
-                  aria-label="Discord"
+                  aria-label="Email"
                 >
-                  <MessageSquare className="w-4 h-4" />
+                  <Mail className="w-4 h-4" />
                 </a>
               </div>
             </div>

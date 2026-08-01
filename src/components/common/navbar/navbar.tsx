@@ -71,7 +71,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
               key={item.title}
               href={item.href}
               className={cn(
-                "relative px-3.5 py-1.5 text-xs md:text-sm font-medium rounded-full transition-all duration-200 flex items-center gap-1.5 select-none",
+                "relative px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-200 flex items-center gap-1 select-none",
                 isActive
                   ? "text-primary font-semibold"
                   : "text-muted-foreground hover:text-foreground hover:bg-background/40"

@@ -4,6 +4,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { CountryData } from "./compare-data";
 import { Brain, Sparkles, CheckCircle, Lightbulb } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface AICompareSummaryProps {
   country1: CountryData;
@@ -38,11 +39,28 @@ export function AICompareSummary({ country1, country2 }: AICompareSummaryProps) 
   const c1LeadsText = c1Leads.length > 0 ? c1Leads.slice(0, 3).join(", ") : "specific strategic niches";
   const c2LeadsText = c2Leads.length > 0 ? c2Leads.slice(0, 3).join(", ") : "established indicators";
 
+  const handleClick = () => {
+    openAIDrawer({
+      page: "Compare",
+      section: "Executive Benchmark",
+      card: `${country1.name} vs ${country2.name}`,
+      title: `Executive Comparison: ${country1.name} vs ${country2.name}`,
+      type: "comparison",
+      country: country1.name,
+      metadata: {
+        comparisonCountry: country2.name,
+        c1Leads: c1LeadsText,
+        c2Leads: c2LeadsText,
+      },
+    });
+  };
+
   return (
     <motion.div
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
-      className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/15 via-indigo-500/10 to-purple-500/15 border border-primary/20 p-6 sm:p-8 space-y-4"
+      onClick={handleClick}
+      className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/15 via-indigo-500/10 to-purple-500/15 border border-primary/20 p-6 sm:p-8 space-y-4 cursor-pointer group"
     >
       <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 

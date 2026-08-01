@@ -32,6 +32,7 @@ import {
   ShieldCheck,
   Zap,
 } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface ReportPreviewProps {
   report: GeneratedReport;
@@ -151,7 +152,23 @@ export function ReportPreview({
           </h3>
         </div>
 
-        <div className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-indigo-500/10 to-purple-500/10 border border-primary/30 shadow-soft">
+        <div
+          onClick={() =>
+            openAIDrawer({
+              page: "Reports",
+              section: "Executive Summary",
+              card: report.title,
+              title: report.title,
+              type: "report",
+              country: "India",
+              year: (report as any).generatedYear || report.generatedAt || "2025",
+              metadata: {
+                executiveSummary: report.executiveSummary,
+              },
+            })
+          }
+          className="p-5 sm:p-6 rounded-2xl bg-gradient-to-r from-primary/10 via-indigo-500/10 to-purple-500/10 border border-primary/30 shadow-soft cursor-pointer group"
+        >
           <p className="text-xs sm:text-sm text-foreground/90 leading-relaxed font-medium">
             {report.executiveSummary}
           </p>

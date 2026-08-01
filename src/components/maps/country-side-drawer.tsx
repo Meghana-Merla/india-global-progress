@@ -27,6 +27,7 @@ import {
 } from "recharts";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface CountrySideDrawerProps {
   country: MapCountryData | null;

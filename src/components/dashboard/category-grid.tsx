@@ -6,16 +6,20 @@ import { CategoryData } from "@/data/mock";
 import { CategoryCard } from "./category-card";
 import { Search, Layers, SlidersHorizontal } from "lucide-react";
 
+import { AIInsightCardContext } from "@/components/common/ai-drawer";
+
 export interface CategoryGridProps {
   categories?: CategoryData[];
   title?: string;
   subtitle?: string;
+  onSelectCard?: (context: AIInsightCardContext) => void;
 }
 
 export function CategoryGrid({
   categories = [],
   title = "Category Overview",
   subtitle = "Performance across 10 strategic global evaluation pillars",
+  onSelectCard,
 }: CategoryGridProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<"rank" | "score" | "name">("score");
@@ -106,7 +110,11 @@ export function CategoryGrid({
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 md:gap-5"
         >
           {filteredCategories.map((category) => (
-            <CategoryCard key={category.id} category={category} />
+            <CategoryCard
+              key={category.id}
+              category={category}
+              onSelectCard={onSelectCard}
+            />
           ))}
         </motion.div>
       ) : (

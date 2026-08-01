@@ -6,11 +6,14 @@ import { TrendingUp, TrendingDown, Minus } from "lucide-react";
 import { KPICardData } from "@/data/mock";
 import { cn } from "@/lib/utils";
 
+import { AIInsightCardContext } from "@/components/common/ai-drawer";
+
 export interface KPICardProps {
   card: KPICardData;
+  onSelectCard?: (context: AIInsightCardContext) => void;
 }
 
-export function KPICard({ card }: KPICardProps) {
+export function KPICard({ card, onSelectCard }: KPICardProps) {
   const isUp = card.direction === "up";
   const isDown = card.direction === "down";
 
@@ -31,12 +34,28 @@ export function KPICard({ card }: KPICardProps) {
     })
     .join(" ");
 
+  const handleClick = () => {
+    onSelectCard?.({
+      title: card.title,
+      type: "kpi",
+      indicator: card.title,
+      country: "India",
+      metadata: {
+        rank: card.rank,
+        score: card.score,
+        trend: card.trend,
+        source: card.source,
+      },
+    });
+  };
+
   return (
     <motion.div
       variants={{
         initial: { opacity: 0, y: 15 },
         animate: { opacity: 1, y: 0 },
       }}
+      onClick={handleClick}
       className="glass-card-hover p-5 relative overflow-hidden flex flex-col justify-between group cursor-pointer"
     >
       {/* Top Header: Title & Source Badge */}

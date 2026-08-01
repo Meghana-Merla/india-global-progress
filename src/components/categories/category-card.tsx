@@ -13,6 +13,8 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { openAIDrawer } from "@/components/common/ai-drawer";
+
 export interface CategoryCardProps {
   category: CategoryDetailData;
   isSelected?: boolean;
@@ -34,6 +36,27 @@ export function CategoryCard({
   const circumference = 2 * Math.PI * radius;
   const progressOffset = circumference - (category.overallScore / 100) * circumference;
 
+  const handleClick = (e: React.MouseEvent) => {
+    onClick?.();
+    openAIDrawer({
+      page: "Categories",
+      section: "Strategic Pillars",
+      card: category.title,
+      title: category.title,
+      type: "category",
+      category: category.title,
+      country: "India",
+      year: "2025",
+      score: category.overallScore,
+      rank: `#${category.globalRank}`,
+      metadata: {
+        shortDescription: category.shortDescription,
+        indicatorCount: category.indicatorCount,
+        totalCountries: category.totalCountries,
+      },
+    });
+  };
+
   return (
     <motion.div
       variants={{
@@ -42,7 +65,7 @@ export function CategoryCard({
       }}
       transition={{ duration: 0.3 }}
       whileHover={{ y: -6, transition: { duration: 0.2, ease: "easeOut" } }}
-      onClick={onClick}
+      onClick={handleClick}
       className={cn(
         "glass-card-hover p-6 rounded-2xl border flex flex-col justify-between relative overflow-hidden group cursor-pointer shadow-md select-none transition-all duration-300",
         isSelected

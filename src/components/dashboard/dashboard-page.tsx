@@ -1,10 +1,11 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { DashboardHeader } from "./dashboard-header";
 import { KPIGrid } from "./kpi-grid";
 import { CategoryGrid } from "./category-grid";
 import { RecentHighlights } from "./recent-highlights";
+import { AIInsightDrawer, AIInsightCardContext } from "@/components/common/ai-drawer";
 import { useYear } from "@/providers";
 import { getDashboardData } from "@/data/mock";
 import { exportDashboardPDF } from "@/lib/dashboard-pdf-export";
@@ -14,6 +15,17 @@ import Link from "next/link";
 export function DashboardPage() {
   const { selectedYear } = useYear();
   const data = getDashboardData(selectedYear);
+
+  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const [activeContext, setActiveContext] = useState<AIInsightCardContext | null>(null);
+
+  const handleSelectCard = (context: AIInsightCardContext) => {
+    setActiveContext({
+      ...context,
+      year: selectedYear,
+    });
+    setAiDrawerOpen(true);
+  };
 
   const handleRefresh = () => {
     console.log(`Refreshing IndiaLens AI dashboard data for ${selectedYear}...`);
@@ -39,14 +51,28 @@ export function DashboardPage() {
             Key Strategic Indicators ({selectedYear})
           </h2>
           <span className="text-xs text-muted-foreground font-medium">
-            Updated Real-time via Global APIs
+            Click any indicator card to open AI Briefing
           </span>
         </div>
-        <KPIGrid cards={data.kpis} />
+        <KPIGrid cards={data.kpis} onSelectCard={handleSelectCard} />
       </section>
 
       {/* AI Intelligence Spotlight Banner */}
-      <section className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/15 via-indigo-500/10 to-purple-500/15 border border-primary/30 p-6 sm:p-8 shadow-soft">
+      <section
+        onClick={() =>
+          handleSelectCard({
+            title: data.aiSummary.title,
+            type: "ai-summary",
+            country: "India",
+            year: selectedYear,
+            metadata: {
+              badge: data.aiSummary.badge,
+              description: data.aiSummary.description,
+            },
+          })
+        }
+        className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary/15 via-indigo-500/10 to-purple-500/15 border border-primary/30 p-6 sm:p-8 shadow-soft cursor-pointer group"
+      >
         <div className="absolute top-0 right-0 -mt-8 -mr-8 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
           <div className="space-y-2 max-w-2xl">
@@ -54,7 +80,7 @@ export function DashboardPage() {
               <Brain className="w-3.5 h-3.5" />
               <span>{data.aiSummary.badge}</span>
             </div>
-            <h3 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight">
+            <h3 className="text-xl sm:text-2xl font-extrabold text-foreground tracking-tight group-hover:text-primary transition-colors">
               {data.aiSummary.title}
             </h3>
             <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
@@ -64,6 +90,7 @@ export function DashboardPage() {
           <div className="flex items-center gap-3">
             <Link
               href="/ai-insights"
+              onClick={(e) => e.stopPropagation()}
               className="inline-flex items-center gap-2 px-4 py-2.5 text-xs font-bold rounded-xl bg-card border border-border text-foreground hover:bg-secondary hover:border-primary/40 transition-all shadow-xs"
             >
               <span>View Full AI Report</span>
@@ -81,10 +108,10 @@ export function DashboardPage() {
             Category Performance Overview ({selectedYear})
           </h2>
           <span className="text-xs text-muted-foreground font-medium">
-            10 Main Strategic Domains
+            Click any category card for AI Deep-Dive
           </span>
         </div>
-        <CategoryGrid categories={data.categories} />
+        <CategoryGrid categories={data.categories} onSelectCard={handleSelectCard} />
       </section>
 
       {/* 4. Recent Highlights Timeline */}
@@ -95,8 +122,15 @@ export function DashboardPage() {
             Recent Index Releases & News ({selectedYear})
           </h2>
         </div>
-        <RecentHighlights highlights={data.highlights} />
+        <RecentHighlights highlights={data.highlights} onSelectCard={handleSelectCard} />
       </section>
+
+      {/* Reusable AI Insight Drawer */}
+      <AIInsightDrawer
+        isOpen={aiDrawerOpen}
+        onClose={() => setAiDrawerOpen(false)}
+        context={activeContext}
+      />
     </div>
   );
 }

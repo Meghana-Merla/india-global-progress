@@ -18,6 +18,7 @@ import {
   Lock,
   Search,
 } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export function MethodologyPage() {
   const trustedOrgs = [

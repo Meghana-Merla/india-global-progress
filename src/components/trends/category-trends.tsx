@@ -16,6 +16,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { CategoryTrendSeries, TrendYear, TREND_YEARS } from "@/data/mock/trends";
 import { Layers, CheckCircle2, Circle, Eye, EyeOff } from "lucide-react";
 import { motion } from "framer-motion";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface CategoryTrendsProps {
   categories: CategoryTrendSeries[];

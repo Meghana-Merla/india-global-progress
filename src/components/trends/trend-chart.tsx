@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
 import { IndicatorTrend, TrendYear } from "@/data/mock/trends";
 import { TrendingUp, ArrowUpRight, ArrowDownRight, ExternalLink } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface TrendChartProps {
   indicator: IndicatorTrend;
@@ -78,8 +79,33 @@ export function TrendChart({ indicator, startYear = "2020", endYear = "2025" }: 
   const rankDiff = startPoint.rank - endPoint.rank; // Positive means rank improved (e.g. 6 to 4 = +2)
   const isImproved = rankDiff >= 0;
 
+  const handleClick = () => {
+    openAIDrawer({
+      page: "Trends",
+      section: "Featured Indicator Trajectory",
+      card: indicator.name,
+      title: `${indicator.name} (${startYear}–${endYear})`,
+      type: "trend",
+      category: indicator.category,
+      country: "India",
+      year: `${startYear}–${endYear}`,
+      rank: `#${endPoint.rank}`,
+      score: endPoint.score,
+      metadata: {
+        source: indicator.source,
+        description: indicator.description,
+        startValue: startPoint.displayValue,
+        currentValue: endPoint.displayValue,
+      },
+    });
+  };
+
   return (
-    <GlassCard hoverEffect className="p-5 border border-border/60 flex flex-col justify-between h-full space-y-4">
+    <GlassCard
+      hoverEffect
+      onClick={handleClick}
+      className="p-5 border border-border/60 flex flex-col justify-between h-full space-y-4 cursor-pointer"
+    >
       {/* Header Info */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
@@ -96,10 +122,13 @@ export function TrendChart({ indicator, startYear = "2020", endYear = "2025" }: 
         </div>
 
         {/* Controls: Rank vs Score Toggle & Change Badge */}
-        <div className="flex items-center gap-2 self-start sm:self-auto">
+        <div className="flex items-center gap-2 self-start sm:self-auto" onClick={(e) => e.stopPropagation()}>
           <div className="flex items-center bg-background/80 p-0.5 rounded-lg border border-border text-[11px] font-semibold">
             <button
-              onClick={() => setViewMode("rank")}
+              onClick={(e) => {
+                e.stopPropagation();
+                setViewMode("rank");
+              }}
               className={`px-2 py-1 rounded-md transition-all ${
                 isRankView ? "bg-primary text-white font-bold" : "text-muted-foreground hover:text-foreground"
               }`}
@@ -107,7 +136,10 @@ export function TrendChart({ indicator, startYear = "2020", endYear = "2025" }: 
               Rank
             </button>
             <button
-              onClick={() => setViewMode("score")}
+              onClick={(e) => {
+                e.stopPropagation();
+                setViewMode("score");
+              }}
               className={`px-2 py-1 rounded-md transition-all ${
                 !isRankView ? "bg-primary text-white font-bold" : "text-muted-foreground hover:text-foreground"
               }`}

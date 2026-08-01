@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { CategoryIndicator } from "./category-data";
 import { cn } from "@/lib/utils";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface IndicatorTableProps {
   indicators: CategoryIndicator[];
@@ -181,8 +182,27 @@ export function IndicatorTable({
                   <tr
                     key={ind.id}
                     id={`indicator-row-${ind.id}`}
+                    onClick={() =>
+                      openAIDrawer({
+                        page: "Categories",
+                        section: "Indicator Table",
+                        card: ind.name,
+                        title: ind.name,
+                        type: "indicator",
+                        category: categoryTitle,
+                        country: "India",
+                        year: ind.year || "2025",
+                        score: ind.score,
+                        rank: `#${ind.rank}`,
+                        metadata: {
+                          source: ind.source,
+                          totalCountries: ind.totalCountries,
+                          trend: (ind as any).trendBadge?.text || ind.trend || "Stable",
+                        },
+                      })
+                    }
                     className={cn(
-                      "transition-all duration-300 group",
+                      "transition-all duration-300 group cursor-pointer",
                       isHighlighted
                         ? "bg-primary/20 border-y-2 border-primary/80 shadow-md ring-2 ring-primary/40 font-bold"
                         : "hover:bg-primary/5 font-medium"

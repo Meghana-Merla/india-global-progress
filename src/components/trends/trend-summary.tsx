@@ -5,6 +5,7 @@ import { GlassCard } from "@/components/ui/glass-card";
 import { TrendingUp, TrendingDown, Award, Crown, ArrowUpRight, ArrowDownRight } from "lucide-react";
 import { motion } from "framer-motion";
 import { TrendsPageSummary } from "@/data/mock/trends";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface TrendSummaryProps {
   summary: TrendsPageSummary;
@@ -66,6 +67,23 @@ export function TrendSummary({ summary, startYear, endYear }: TrendSummaryProps)
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: idx * 0.08 }}
+            onClick={() =>
+              openAIDrawer({
+                page: "Trends",
+                section: "Summary Metrics",
+                card: card.title,
+                title: card.title,
+                type: "trend",
+                country: "India",
+                year: `${startYear}-${endYear}`,
+                metadata: {
+                  value: card.value,
+                  badge: card.badge,
+                  description: card.description,
+                },
+              })
+            }
+            className="cursor-pointer"
           >
             <GlassCard hoverEffect className="relative overflow-hidden group h-full flex flex-col justify-between p-5 border border-border/60 hover:border-primary/50 transition-all duration-300">
               {/* Top Row: Icon & Title */}

@@ -13,6 +13,7 @@ export interface OverviewCardProps {
   children: React.ReactNode;
   footer?: React.ReactNode;
   className?: string;
+  onClick?: () => void;
 }
 
 export function OverviewCard({
@@ -23,6 +24,7 @@ export function OverviewCard({
   children,
   footer,
   className,
+  onClick,
 }: OverviewCardProps) {
   const badgeStyles = {
     default: "bg-secondary text-secondary-foreground border-border/40",
@@ -39,8 +41,10 @@ export function OverviewCard({
         animate: { opacity: 1, y: 0 },
       }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      onClick={onClick}
       className={cn(
         "glass-card-hover p-6 flex flex-col justify-between shadow-soft border border-border/50 relative overflow-hidden group select-none min-h-[190px]",
+        onClick && "cursor-pointer",
         className
       )}
     >

@@ -21,6 +21,7 @@ import {
   AlertCircle,
   Lightbulb,
 } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface AITrendSummaryProps {
   insightData?: AITrendInsightData;
@@ -139,7 +140,23 @@ export function AITrendSummary({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
-          className="p-4 sm:p-5 rounded-2xl bg-card/80 border border-emerald-500/30 shadow-xs flex flex-col justify-between space-y-3 relative group hover:border-emerald-500/60 transition-all"
+          onClick={() =>
+            openAIDrawer({
+              page: "Trends",
+              section: "Biggest Improvement",
+              card: data.biggestImprovement.indicator,
+              title: `Biggest Improvement: ${data.biggestImprovement.indicator}`,
+              type: "trend",
+              category: data.biggestImprovement.category,
+              country: "India",
+              year: `${startYear}–${endYear}`,
+              metadata: {
+                change: data.biggestImprovement.change,
+                summary: data.biggestImprovement.detail,
+              },
+            })
+          }
+          className="p-4 sm:p-5 rounded-2xl bg-card/80 border border-emerald-500/30 shadow-xs flex flex-col justify-between space-y-3 relative group hover:border-emerald-500/60 transition-all cursor-pointer"
         >
           <div>
             <div className="flex items-center justify-between gap-2 mb-2">

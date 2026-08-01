@@ -14,6 +14,7 @@ import {
   ExternalLink,
   ShieldAlert,
 } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
   <svg

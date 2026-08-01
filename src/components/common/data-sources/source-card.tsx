@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ExternalLink } from "lucide-react";
 import { DataSourceItem } from "./source-data";
 import { cn } from "@/lib/utils";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface SourceCardProps {
   source: DataSourceItem;
@@ -23,6 +24,22 @@ export function SourceCard({ source, className }: SourceCardProps) {
 
   const badgeStyle = badgeColorMap[source.categoryVariant || "general"];
 
+  const handleClick = () => {
+    openAIDrawer({
+      page: "Sources",
+      section: "Data Sources",
+      card: source.name,
+      title: source.name,
+      type: "source",
+      country: "Global / India",
+      year: "2025",
+      metadata: {
+        category: source.category,
+        description: source.description,
+      },
+    });
+  };
+
   return (
     <motion.div
       variants={{
@@ -30,8 +47,9 @@ export function SourceCard({ source, className }: SourceCardProps) {
         animate: { opacity: 1, y: 0 },
       }}
       whileHover={{ y: -4, transition: { duration: 0.2, ease: "easeOut" } }}
+      onClick={handleClick}
       className={cn(
-        "glass-card-hover p-5 sm:p-6 flex flex-col justify-between border border-border/50 shadow-soft relative overflow-hidden group rounded-2xl select-none min-h-[170px]",
+        "glass-card-hover p-5 sm:p-6 flex flex-col justify-between border border-border/50 shadow-soft relative overflow-hidden group rounded-2xl select-none min-h-[170px] cursor-pointer",
         className
       )}
     >
@@ -51,16 +69,6 @@ export function SourceCard({ source, className }: SourceCardProps) {
               </h3>
             </div>
           </div>
-
-          <a
-            href={source.url || "/sources"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary transition-colors flex-shrink-0"
-            title={`Visit ${source.name}`}
-          >
-            <ExternalLink className="w-4 h-4" />
-          </a>
         </div>
 
         {/* Description */}

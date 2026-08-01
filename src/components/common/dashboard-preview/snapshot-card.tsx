@@ -21,9 +21,10 @@ export interface PreviewCardItem {
 export interface SnapshotCardProps {
   card: PreviewCardItem;
   className?: string;
+  onClick?: () => void;
 }
 
-export function SnapshotCard({ card, className }: SnapshotCardProps) {
+export function SnapshotCard({ card, className, onClick }: SnapshotCardProps) {
   const Icon = card.icon;
 
   if (card.type === "score") {
@@ -34,6 +35,7 @@ export function SnapshotCard({ card, className }: SnapshotCardProps) {
         badgeVariant={card.badgeVariant}
         icon={Icon}
         className={className}
+        onClick={onClick}
         footer={card.description}
       >
         <div className="flex items-center justify-between gap-4 py-1">
@@ -57,6 +59,7 @@ export function SnapshotCard({ card, className }: SnapshotCardProps) {
         badgeVariant={card.badgeVariant}
         icon={Icon}
         className={className}
+        onClick={onClick}
         footer={
           card.trend && (
             <span className="text-emerald-600 dark:text-emerald-400 font-medium flex items-center gap-1">
@@ -85,6 +88,7 @@ export function SnapshotCard({ card, className }: SnapshotCardProps) {
       badgeVariant={card.badgeVariant}
       icon={Icon}
       className={className}
+      onClick={onClick}
       footer={card.description}
     >
       <div className="py-2">

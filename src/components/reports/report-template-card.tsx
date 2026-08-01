@@ -13,6 +13,8 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 
+import { openAIDrawer } from "@/components/common/ai-drawer";
+
 export interface ReportTemplateCardProps {
   template: ReportTemplate;
   isSelected: boolean;
@@ -26,6 +28,24 @@ export function ReportTemplateCard({
   onSelect,
   index = 0,
 }: ReportTemplateCardProps) {
+  const handleClick = () => {
+    onSelect();
+    openAIDrawer({
+      page: "Reports",
+      section: "Report Templates",
+      card: template.title,
+      title: template.title,
+      type: "report",
+      country: "India",
+      year: "2025",
+      metadata: {
+        category: (template as any).category || (template as any).type || "Report",
+        estimatedPages: (template as any).estimatedPages || (template as any).pageCount || "5-10 pages",
+        description: template.description,
+      },
+    });
+  };
+
   // Select icon component
   const renderIcon = () => {
     switch (template.iconName) {
@@ -45,7 +65,7 @@ export function ReportTemplateCard({
       initial={{ opacity: 0, y: 15 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.3, delay: index * 0.08 }}
-      onClick={onSelect}
+      onClick={handleClick}
       className="cursor-pointer h-full"
     >
       <GlassCard

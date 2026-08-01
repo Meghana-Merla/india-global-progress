@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { DataOrganization } from "./source-data";
 import { cn } from "@/lib/utils";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface SourceCardProps {
   organization: DataOrganization;
@@ -21,6 +22,25 @@ export interface SourceCardProps {
 export function SourceCard({ organization, className }: SourceCardProps) {
   const initials = organization.shortName || organization.name.slice(0, 3).toUpperCase();
 
+  const handleClick = () => {
+    openAIDrawer({
+      page: "Sources",
+      section: "Multilateral Organizations",
+      card: organization.name,
+      title: `${organization.name} (${organization.shortName})`,
+      type: "source",
+      country: "Global / India",
+      year: "2025",
+      metadata: {
+        category: (organization as any).category || "Multilateral Source",
+        indicatorsTracked: (organization as any).indicatorsTracked || (organization as any).indicatorCount || 10,
+        reliabilityScore: (organization as any).reliabilityScore || "98%",
+        updateFrequency: (organization as any).updateFrequency || "Annual",
+        description: (organization as any).description || organization.name,
+      },
+    });
+  };
+
   return (
     <motion.div
       variants={{
@@ -29,8 +49,9 @@ export function SourceCard({ organization, className }: SourceCardProps) {
       }}
       transition={{ duration: 0.3 }}
       whileHover={{ y: -4, transition: { duration: 0.2 } }}
+      onClick={handleClick}
       className={cn(
-        "glass-card-hover p-6 flex flex-col justify-between border border-border/60 rounded-2xl relative overflow-hidden group shadow-md transition-all duration-300",
+        "glass-card-hover p-6 flex flex-col justify-between border border-border/60 rounded-2xl relative overflow-hidden group shadow-md transition-all duration-300 cursor-pointer",
         className
       )}
     >
@@ -119,22 +140,12 @@ export function SourceCard({ organization, className }: SourceCardProps) {
         </div>
       </div>
 
-      {/* External Website Button */}
+      {/* Verified Source Footer */}
       <div className="pt-3 border-t border-border/40 flex items-center justify-between gap-3">
         <span className="text-[11px] font-medium text-muted-foreground inline-flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          Verified Source API
+          Verified Source API Data
         </span>
-
-        <a
-          href={organization.website}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all shadow-xs group/btn cursor-pointer"
-        >
-          <span>Official Website</span>
-          <ExternalLink className="w-3.5 h-3.5 group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5 transition-transform" />
-        </a>
       </div>
     </motion.div>
   );

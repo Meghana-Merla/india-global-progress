@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { DATASET_EXPLORER_MOCK, DatasetItem } from "./source-data";
 import { cn } from "@/lib/utils";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface DatasetTableProps {
   initialDatasets?: DatasetItem[];
@@ -169,7 +170,25 @@ export function DatasetTable({
               filteredDatasets.map((ds) => (
                 <tr
                   key={ds.id}
-                  className="hover:bg-primary/5 transition-colors group"
+                  onClick={() =>
+                    openAIDrawer({
+                      page: "Sources",
+                      section: "Dataset Table",
+                      card: ds.indicator,
+                      title: ds.indicator,
+                      type: "dataset",
+                      category: ds.category,
+                      country: "Global / India",
+                      year: "2025",
+                      metadata: {
+                        source: ds.source,
+                        frequency: ds.frequency,
+                        coverage: ds.coverage,
+                        status: ds.status,
+                      },
+                    })
+                  }
+                  className="hover:bg-primary/5 transition-colors group cursor-pointer"
                 >
                   {/* Indicator Column */}
                   <td className="py-3.5 px-4 text-foreground font-semibold group-hover:text-primary transition-colors">

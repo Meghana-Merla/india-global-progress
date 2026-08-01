@@ -10,12 +10,16 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+import { AIInsightCardContext } from "@/components/common/ai-drawer";
+
 export interface RecentHighlightsProps {
   highlights?: HighlightItem[];
+  onSelectCard?: (context: AIInsightCardContext) => void;
 }
 
 export function RecentHighlights({
   highlights = [],
+  onSelectCard,
 }: RecentHighlightsProps) {
   const [filter, setFilter] = useState<"all" | "improvement" | "decline">("all");
 
@@ -23,6 +27,21 @@ export function RecentHighlights({
     if (filter === "all") return true;
     return item.type === filter;
   });
+
+  const handleHighlightClick = (item: HighlightItem) => {
+    onSelectCard?.({
+      title: item.title,
+      type: "highlight",
+      country: "India",
+      metadata: {
+        publisher: item.publisher,
+        date: item.date,
+        currentRank: item.currentRank,
+        changeBadge: item.changeBadge,
+        description: item.description,
+      },
+    });
+  };
 
   return (
     <div className="space-y-6">
@@ -38,7 +57,7 @@ export function RecentHighlights({
             </h2>
           </div>
           <p className="text-xs sm:text-sm text-muted-foreground">
-            Timeline of global index updates and ranking revisions for India
+            Timeline of global index updates and ranking revisions for India (Click any item for AI Analysis)
           </p>
         </div>
 
@@ -116,7 +135,10 @@ export function RecentHighlights({
               </div>
 
               {/* Card Container */}
-              <div className="glass-card-hover p-4 sm:p-5 rounded-2xl border border-border/50 transition-all space-y-3">
+              <div
+                onClick={() => handleHighlightClick(item)}
+                className="glass-card-hover p-4 sm:p-5 rounded-2xl border border-border/50 transition-all space-y-3 cursor-pointer"
+              >
                 {/* Card Header */}
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div className="flex items-center gap-2">

@@ -6,6 +6,8 @@ import { ArrowRight } from "lucide-react";
 import { CategoryItem } from "./category-data";
 import { cn } from "@/lib/utils";
 
+import { openAIDrawer } from "@/components/common/ai-drawer";
+
 export interface CategoryCardProps {
   category: CategoryItem;
   className?: string;
@@ -14,6 +16,23 @@ export interface CategoryCardProps {
 export function CategoryCard({ category, className }: CategoryCardProps) {
   const Icon = category.icon;
 
+  const handleClick = () => {
+    openAIDrawer({
+      page: "Home",
+      section: "Explore Categories",
+      card: category.title,
+      title: category.title,
+      type: "category",
+      category: category.title,
+      country: "India",
+      year: "2025",
+      metadata: {
+        description: category.description,
+        count: category.count,
+      },
+    });
+  };
+
   return (
     <motion.div
       variants={{
@@ -21,6 +40,7 @@ export function CategoryCard({ category, className }: CategoryCardProps) {
         animate: { opacity: 1, y: 0 },
       }}
       whileHover={{ y: -6, transition: { duration: 0.25, ease: "easeOut" } }}
+      onClick={handleClick}
       className={cn(
         "glass-card-hover p-6 flex flex-col justify-between border border-border/50 shadow-soft relative overflow-hidden group select-none cursor-pointer rounded-2xl min-h-[230px]",
         className

@@ -13,7 +13,9 @@ import {
   ArrowRight,
 } from "lucide-react";
 import { Section, SectionHeading } from "@/components/layouts";
+import { useState } from "react";
 import { SnapshotCard, PreviewCardItem } from "./snapshot-card";
+import { AIInsightDrawer, AIInsightCardContext } from "@/components/common/ai-drawer";
 
 export const overviewCardsData: PreviewCardItem[] = [
   {
@@ -80,13 +82,33 @@ export const overviewCardsData: PreviewCardItem[] = [
 ];
 
 export function OverviewSection() {
+  const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const [activeContext, setActiveContext] = useState<AIInsightCardContext | null>(null);
+
+  const handleCardClick = (card: PreviewCardItem) => {
+    setActiveContext({
+      title: card.title,
+      type: card.type,
+      category: card.title.includes("Category") || card.title.includes("Improved") ? String(card.value) : undefined,
+      country: "India",
+      year: "2025",
+      metadata: {
+        value: card.value,
+        badge: card.badge,
+        description: card.description,
+        trend: card.trend,
+      },
+    });
+    setAiDrawerOpen(true);
+  };
+
   return (
     <Section id="dashboard-preview">
       {/* Top Section Heading with View Full Dashboard Action */}
       <SectionHeading
         badge="KPI PREVIEW"
         title="India at a Glance"
-        description="A quick overview of India's current global performance across major international indicators."
+        description="A quick overview of India's current global performance. Click any card to open AI Briefing."
         action={
           <Link
             href="/dashboard"
@@ -114,9 +136,20 @@ export function OverviewSection() {
         className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 w-full"
       >
         {overviewCardsData.map((card) => (
-          <SnapshotCard key={card.id} card={card} />
+          <SnapshotCard
+            key={card.id}
+            card={card}
+            onClick={() => handleCardClick(card)}
+          />
         ))}
       </motion.div>
+
+      {/* Reusable AI Insight Drawer */}
+      <AIInsightDrawer
+        isOpen={aiDrawerOpen}
+        onClose={() => setAiDrawerOpen(false)}
+        context={activeContext}
+      />
     </Section>
   );
 }

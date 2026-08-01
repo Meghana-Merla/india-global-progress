@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { GlassCard } from "@/components/ui/glass-card";
 import { TimelineEvent, timelineEventsMock, TrendYear } from "@/data/mock/trends";
 import { Calendar, Sparkles, Milestone, ArrowUpRight, Award, Activity } from "lucide-react";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export interface TrendTimelineProps {
   events?: TimelineEvent[];
@@ -83,7 +84,26 @@ export function TrendTimeline({
                       : "sm:ml-auto sm:pl-6 sm:text-left"
                   }`}
                 >
-                  <div className="p-5 rounded-2xl bg-card/90 border border-border/70 shadow-xl space-y-3 hover:border-primary/50 transition-all duration-300 group relative overflow-hidden">
+                  <div
+                    onClick={() =>
+                      openAIDrawer({
+                        page: "Trends",
+                        section: "Timeline Milestones",
+                        card: event.title,
+                        title: `${event.title} (${event.year})`,
+                        type: "timeline",
+                        country: "India",
+                        year: event.year,
+                        metadata: {
+                          subtitle: event.subtitle,
+                          category: event.category,
+                          impactBadge: event.impactBadge,
+                          description: event.description,
+                        },
+                      })
+                    }
+                    className="p-5 rounded-2xl bg-card/90 border border-border/70 shadow-xl space-y-3 hover:border-primary/50 transition-all duration-300 group relative overflow-hidden cursor-pointer"
+                  >
                     {/* Top Badges */}
                     <div
                       className={`flex flex-wrap items-center gap-2 ${

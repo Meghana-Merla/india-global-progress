@@ -18,6 +18,8 @@ import {
 } from "lucide-react";
 import { CategoryData } from "@/data/mock";
 
+import { AIInsightCardContext } from "@/components/common/ai-drawer";
+
 const iconMap: Record<string, LucideIcon> = {
   TrendingUp,
   Users,
@@ -33,10 +35,26 @@ const iconMap: Record<string, LucideIcon> = {
 
 export interface CategoryCardProps {
   category: CategoryData;
+  onSelectCard?: (context: AIInsightCardContext) => void;
 }
 
-export function CategoryCard({ category }: CategoryCardProps) {
+export function CategoryCard({ category, onSelectCard }: CategoryCardProps) {
   const IconComponent = iconMap[category.iconName] || TrendingUp;
+
+  const handleClick = () => {
+    onSelectCard?.({
+      title: category.name,
+      type: "category",
+      category: category.name,
+      country: "India",
+      metadata: {
+        rank: category.globalRank,
+        score: category.overallScore,
+        indicatorCount: category.indicatorCount,
+        description: category.description,
+      },
+    });
+  };
 
   return (
     <motion.div
@@ -44,6 +62,7 @@ export function CategoryCard({ category }: CategoryCardProps) {
         initial: { opacity: 0, scale: 0.95 },
         animate: { opacity: 1, scale: 1 },
       }}
+      onClick={handleClick}
       className="glass-card-hover p-5 flex flex-col justify-between group cursor-pointer border border-border/50 relative overflow-hidden"
     >
       {/* Background Subtle Accent Glow */}

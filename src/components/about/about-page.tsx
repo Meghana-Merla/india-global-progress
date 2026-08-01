@@ -20,6 +20,7 @@ import {
   Zap,
 } from "lucide-react";
 import Link from "next/link";
+import { openAIDrawer } from "@/components/common/ai-drawer";
 
 export function AboutPage() {
   const coreFeatures = [

@@ -5,10 +5,9 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Sun, Moon, Menu, ChevronDown } from "lucide-react";
+import { Search, Sun, Moon, ChevronDown } from "lucide-react";
 import { NavItem, navigationItems } from "./nav-links";
 import { Logo } from "./logo";
-import { MobileMenu } from "./mobile-menu";
 import { cn } from "@/lib/utils";
 
 const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
@@ -37,7 +36,6 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
   const pathname = usePathname();
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
 
   useEffect(() => {
@@ -211,27 +209,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
         >
           <GithubIcon className="w-4 h-4" />
         </a>
-
-        {/* Mobile Hamburger Toggle Button */}
-        <button
-          onClick={() => setMobileOpen((prev) => !prev)}
-          className="lg:hidden p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none active:scale-95 cursor-pointer"
-          aria-label="Open mobile menu"
-          title="Open mobile menu"
-        >
-          <Menu className="w-5 h-5 text-foreground" />
-        </button>
       </div>
-
-      {/* Slide-in Mobile Drawer */}
-      <MobileMenu
-        isOpen={mobileOpen}
-        onClose={() => setMobileOpen(false)}
-        items={items}
-        activePathname={pathname}
-        theme={theme}
-        onToggleTheme={handleToggleTheme}
-      />
     </nav>
   );
 }

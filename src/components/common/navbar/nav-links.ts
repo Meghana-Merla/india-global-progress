@@ -9,6 +9,7 @@ import {
   Sparkles,
   FileText,
   Database,
+  Sliders,
   Info,
   Mail,
 } from "lucide-react";
@@ -31,6 +32,7 @@ export const navigationItems: NavItem[] = [
   { title: "AI Insights", href: "/ai-insights", icon: Sparkles, badge: "AI" },
   { title: "Reports", href: "/reports", icon: FileText },
   { title: "Sources", href: "/sources", icon: Database },
+  { title: "Methodology", href: "/methodology", icon: Sliders },
   { title: "About", href: "/about", icon: Info },
   { title: "Contact", href: "/contact", icon: Mail },
 ];

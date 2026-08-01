@@ -53,7 +53,7 @@ export function MobileMenu({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm xl:hidden"
           />
 
           {/* Slide-in Drawer */}
@@ -62,15 +62,15 @@ export function MobileMenu({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-sm bg-background/95 backdrop-blur-xl border-l border-border/50 shadow-2xl p-6 flex flex-col justify-between overflow-y-auto lg:hidden"
+            className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-[320px] sm:max-w-sm bg-background/95 backdrop-blur-xl border-l border-border/50 shadow-2xl p-5 sm:p-6 flex flex-col justify-between overflow-y-auto xl:hidden"
           >
             {/* Drawer Header */}
             <div>
-              <div className="flex items-center justify-between pb-6 border-b border-border/40">
+              <div className="flex items-center justify-between pb-5 border-b border-border/40">
                 <Logo onClick={onClose} />
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                  className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                   aria-label="Close menu"
                 >
                   <X className="w-5 h-5" />
@@ -78,7 +78,7 @@ export function MobileMenu({
               </div>
 
               {/* Navigation Links */}
-              <nav className="mt-6 flex flex-col gap-1.5">
+              <nav className="mt-5 flex flex-col gap-1 sm:gap-1.5">
                 {items.map((item) => {
                   const Icon = item.icon;
                   const isActive =
@@ -91,18 +91,18 @@ export function MobileMenu({
                       href={item.href}
                       onClick={onClose}
                       className={cn(
-                        "flex items-center justify-between px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200",
+                        "flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-medium transition-all duration-200",
                         isActive
-                          ? "bg-primary/10 text-primary font-semibold border border-primary/20"
+                          ? "bg-primary/10 text-primary font-bold border border-primary/20 shadow-xs"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
                       )}
                     >
                       <div className="flex items-center gap-3">
-                        {Icon && <Icon className="w-4 h-4" />}
+                        {Icon && <Icon className="w-4 h-4 shrink-0 text-primary" />}
                         <span>{item.title}</span>
                       </div>
                       {item.badge && (
-                        <span className="px-2 py-0.5 text-[10px] font-bold uppercase rounded-full bg-primary text-primary-foreground">
+                        <span className="px-2 py-0.5 text-[9px] font-bold uppercase rounded-full bg-primary text-primary-foreground">
                           {item.badge}
                         </span>
                       )}
@@ -113,19 +113,34 @@ export function MobileMenu({
             </div>
 
             {/* Drawer Footer Actions */}
-            <div className="pt-6 border-t border-border/40 flex flex-col gap-4">
-              <div className="flex items-center justify-around gap-2">
+            <div className="pt-5 border-t border-border/40 flex flex-col gap-3">
+              <div className="flex items-center gap-2">
                 <button
                   onClick={() => {
                     onClose();
                     window.dispatchEvent(new CustomEvent("open-command-palette"));
                   }}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-muted/60 text-xs font-medium text-foreground hover:bg-muted transition-colors flex-1 justify-center"
+                  className="flex items-center gap-2 px-3.5 py-2.5 rounded-xl bg-muted/60 text-xs font-semibold text-foreground hover:bg-muted transition-colors flex-1 justify-center cursor-pointer"
                   aria-label="Search"
                 >
                   <Search className="w-4 h-4 text-primary" />
-                  <span>Search</span>
+                  <span>Search...</span>
                 </button>
+
+                {onToggleTheme && (
+                  <button
+                    onClick={onToggleTheme}
+                    className="p-2.5 rounded-xl bg-muted/60 text-foreground hover:bg-muted transition-colors cursor-pointer"
+                    aria-label="Toggle Theme"
+                    title="Toggle Theme"
+                  >
+                    {theme === "dark" ? (
+                      <Sun className="w-4 h-4 text-amber-400" />
+                    ) : (
+                      <Moon className="w-4 h-4 text-indigo-400" />
+                    )}
+                  </button>
+                )}
 
                 <a
                   href="https://github.com/Meghana-Merla/india-global-progress"
@@ -133,6 +148,7 @@ export function MobileMenu({
                   rel="noreferrer"
                   className="p-2.5 rounded-xl bg-muted/60 text-foreground hover:bg-muted transition-colors"
                   aria-label="GitHub Repository"
+                  title="GitHub Repository"
                 >
                   <GithubIcon className="w-4 h-4" />
                 </a>

@@ -60,7 +60,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
       </div>
 
       {/* Center Navigation: Desktop Nav Pills */}
-      <div className="hidden lg:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner">
+      <div className="hidden xl:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner">
         {items.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -96,20 +96,36 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
       </div>
 
       {/* Right Section: Action Icons */}
-      <div className="flex items-center gap-2.5">
+      <div className="flex items-center gap-1.5 sm:gap-2.5">
         {/* Command Palette Trigger Button */}
         <button
           onClick={() => window.dispatchEvent(new CustomEvent("open-command-palette"))}
-          className="flex items-center gap-2.5 px-3.5 py-1.5 rounded-full bg-secondary/60 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all text-xs font-medium cursor-pointer shadow-xs"
+          className="flex items-center gap-1.5 px-2.5 py-1.5 sm:px-3.5 sm:py-1.5 rounded-full bg-secondary/60 border border-border/60 text-muted-foreground hover:text-foreground hover:border-primary/40 transition-all text-xs font-medium cursor-pointer shadow-xs"
           aria-label="Open Command Palette (Ctrl+K)"
           title="Open Command Palette (Ctrl+K)"
         >
-          <Search className="w-3.5 h-3.5 text-primary" />
+          <Search className="w-4 h-4 sm:w-3.5 sm:h-3.5 text-primary shrink-0" />
           <span className="hidden sm:inline">Search...</span>
-          <kbd className="px-1.5 py-0.2 rounded text-[10px] font-bold bg-background border border-border/80 text-muted-foreground shadow-xs">
+          <kbd className="hidden md:inline-block px-1.5 py-0.2 rounded text-[10px] font-bold bg-background border border-border/80 text-muted-foreground shadow-xs">
             ⌘K
           </kbd>
         </button>
+
+        {/* Theme Toggle Button */}
+        {mounted && (
+          <button
+            onClick={handleToggleTheme}
+            className="p-2 sm:p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none cursor-pointer"
+            aria-label="Toggle Theme"
+            title="Toggle Theme"
+          >
+            {theme === "dark" ? (
+              <Sun className="w-4 h-4 text-amber-400" />
+            ) : (
+              <Moon className="w-4 h-4 text-indigo-400" />
+            )}
+          </button>
+        )}
 
         {/* GitHub Link Button */}
         <a
@@ -118,17 +134,19 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
           rel="noreferrer"
           className="hidden sm:flex p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none"
           aria-label="GitHub Repository"
+          title="GitHub Repository"
         >
           <GithubIcon className="w-4 h-4" />
         </a>
 
         {/* Mobile Hamburger Toggle Button */}
         <button
-          onClick={() => setMobileOpen(true)}
-          className="lg:hidden p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none"
+          onClick={() => setMobileOpen((prev) => !prev)}
+          className="xl:hidden p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none active:scale-95 cursor-pointer"
           aria-label="Open mobile menu"
+          title="Open mobile menu"
         >
-          <Menu className="w-5 h-5" />
+          <Menu className="w-5 h-5 text-foreground" />
         </button>
       </div>
 

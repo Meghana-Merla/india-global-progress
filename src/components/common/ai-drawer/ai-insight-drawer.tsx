@@ -10,6 +10,7 @@ import {
   Check,
   RefreshCw,
   ArrowRight,
+  ArrowLeft,
   Database,
   Brain,
   MessageSquare,
@@ -180,6 +181,7 @@ export function AIInsightDrawer({
   useEffect(() => {
     if (isOpen && context) {
       document.body.style.overflow = "hidden";
+      document.body.classList.add("ai-drawer-open");
       fetchInsight();
 
       const handleKeyDown = (e: KeyboardEvent) => {
@@ -188,10 +190,12 @@ export function AIInsightDrawer({
       window.addEventListener("keydown", handleKeyDown);
       return () => {
         document.body.style.overflow = "";
+        document.body.classList.remove("ai-drawer-open");
         window.removeEventListener("keydown", handleKeyDown);
       };
     } else {
       document.body.style.overflow = "";
+      document.body.classList.remove("ai-drawer-open");
     }
   }, [isOpen, context]);
 
@@ -314,50 +318,55 @@ export function AIInsightDrawer({
           className="fixed inset-0 bg-black/65 backdrop-blur-sm"
         />
 
-        {/* Right Slide-in Drawer Container */}
+        {/* Full-Screen Drawer Experience (Hides Global Navbar, Full UI Focus) */}
         <motion.div
-          initial={{ x: "100%" }}
-          animate={{ x: 0 }}
-          exit={{ x: "100%" }}
-          transition={{ type: "spring", damping: 28, stiffness: 220 }}
-          className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-[560px] sm:max-w-xl bg-background/95 backdrop-blur-2xl border-l border-border/60 shadow-2xl p-6 sm:p-8 flex flex-col justify-between overflow-y-auto"
+          initial={{ opacity: 0, y: 15 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 15 }}
+          transition={{ duration: 0.2 }}
+          className="fixed inset-0 z-50 w-full h-full bg-background backdrop-blur-2xl p-4 sm:p-6 lg:p-8 flex flex-col justify-between overflow-y-auto"
         >
-          {/* Header */}
-          <div className="space-y-5">
-            <div className="flex items-center justify-between border-b border-border/40 pb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-gradient-primary text-white flex items-center justify-center shadow-glow">
-                  <Brain className="w-5 h-5" />
+          {/* Header Container */}
+          <div className="space-y-4 max-w-5xl mx-auto w-full">
+            {/* Sticky Header with Back Button */}
+            <div className="flex items-center justify-between pb-4 border-b border-border/60 sticky top-0 bg-background/95 backdrop-blur-md z-10">
+              <button
+                onClick={onClose}
+                className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-secondary text-xs sm:text-sm font-semibold text-foreground hover:bg-secondary/80 border border-border cursor-pointer transition-colors"
+                aria-label="Back to page"
+              >
+                <ArrowLeft className="w-4 h-4 text-primary" />
+                <span>Back</span>
+              </button>
+
+              <div className="text-center px-3 flex-1 max-w-lg mx-auto">
+                <div className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-primary flex items-center justify-center gap-1.5">
+                  <Brain className="w-3.5 h-3.5 text-primary" />
+                  <span>AI Insights</span>
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
                 </div>
-                <div>
-                  <div className="text-[10px] font-extrabold uppercase tracking-wider text-primary flex items-center gap-1.5">
-                    <span>IndiaLens AI Intelligence</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-                  </div>
-                  <h2 className="text-lg sm:text-xl font-extrabold text-foreground tracking-tight line-clamp-1">
-                    {title}
-                  </h2>
-                </div>
+                <h2 className="text-xs sm:text-sm md:text-base font-bold text-foreground tracking-tight line-clamp-1">
+                  {title}
+                </h2>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1.5 sm:gap-2">
                 <button
                   onClick={() => fetchInsight(true)}
                   disabled={isLoading}
                   title="Regenerate AI Analysis"
-                  className="p-2 rounded-xl text-muted-foreground hover:text-foreground hover:bg-secondary transition-all disabled:opacity-50 cursor-pointer"
+                  className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary transition-all disabled:opacity-50 cursor-pointer border border-border"
                 >
                   <RefreshCw
                     className={cn("w-4 h-4", isLoading && "animate-spin text-primary")}
                   />
                 </button>
-
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  className="p-2 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer border border-border"
                   aria-label="Close AI Drawer"
                 >
-                  <X className="w-5 h-5" />
+                  <X className="w-4 h-4" />
                 </button>
               </div>
             </div>

@@ -202,6 +202,10 @@
     font-family: var(--font-sans);
   }
 
+  body.ai-drawer-open header {
+    display: none !important;
+  }
+
   ::selection {
     background-color: rgba(124, 58, 237, 0.3);
     color: #A855F7;

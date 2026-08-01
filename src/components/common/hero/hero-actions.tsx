@@ -28,7 +28,7 @@ export function HeroActions({
       {/* Primary CTA */}
       <Link
         href={primaryHref}
-        className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-6 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-sm font-medium shadow-sm hover:shadow-purple-500/20 transition-all duration-200 gap-2 group select-none"
+        className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-6 rounded-lg bg-primary hover:bg-primary/90 text-primary-foreground text-sm font-medium shadow-xs transition-all duration-200 gap-2 group select-none"
       >
         <span>{primaryText}</span>
         <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform duration-200" />
@@ -37,9 +37,9 @@ export function HeroActions({
       {/* Secondary CTA */}
       <Link
         href={secondaryHref}
-        className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-6 rounded-lg border border-white/10 bg-zinc-900/80 text-slate-200 text-sm font-medium hover:bg-zinc-800 hover:border-white/20 transition-all duration-200 gap-2 group select-none"
+        className="inline-flex items-center justify-center w-full sm:w-auto h-11 px-6 rounded-lg border border-border bg-secondary text-foreground text-sm font-medium hover:bg-secondary/80 transition-all duration-200 gap-2 group select-none"
       >
-        <GitCompare className="w-4 h-4 text-purple-400 group-hover:rotate-12 transition-transform duration-200" />
+        <GitCompare className="w-4 h-4 text-primary group-hover:rotate-12 transition-transform duration-200" />
         <span>{secondaryText}</span>
       </Link>
     </motion.div>

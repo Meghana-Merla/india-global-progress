@@ -10,9 +10,10 @@ export interface CompareSummaryProps {
   country1: CountryData;
   country2: CountryData;
   onOpenDrawer?: (id: string) => void;
+  onSelectMetricForAI?: (title: string, key: string) => void;
 }
 
-export function CompareSummary({ country1, country2, onOpenDrawer }: CompareSummaryProps) {
+export function CompareSummary({ country1, country2, onOpenDrawer, onSelectMetricForAI }: CompareSummaryProps) {
   const metricKeys = [
     { key: "gdpRank", label: "GDP Rank" },
     { key: "hdi", label: "HDI Score" },
@@ -33,7 +34,7 @@ export function CompareSummary({ country1, country2, onOpenDrawer }: CompareSumm
             Comparison Summary Indicators
           </h2>
           <p className="text-xs text-muted-foreground">
-            Direct indicator benchmark between {country1.name} and {country2.name}
+            Direct indicator benchmark between {country1.name} and {country2.name} (Click any card for AI Analysis)
           </p>
         </div>
       </div>
@@ -63,11 +64,15 @@ export function CompareSummary({ country1, country2, onOpenDrawer }: CompareSumm
                 initial: { opacity: 0, y: 15 },
                 animate: { opacity: 1, y: 0 },
               }}
-              className="glass-card-hover p-4 rounded-2xl border border-border/50 flex flex-col justify-between space-y-3 relative overflow-hidden"
+              onClick={() => onSelectMetricForAI?.(label, key)}
+              className="glass-card-hover p-4 rounded-2xl border border-border/50 flex flex-col justify-between space-y-3 relative overflow-hidden cursor-pointer group"
             >
+              {/* Top hover indicator */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-primary opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
+
               {/* Header Label & Source/Status */}
               <div className="flex items-center justify-between text-xs font-semibold text-muted-foreground border-b border-border/30 pb-2">
-                <span>{label}</span>
+                <span className="group-hover:text-primary transition-colors font-bold">{label}</span>
                 {winner !== "tie" && (
                   <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-2 py-0.5 rounded-full inline-flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
@@ -85,13 +90,17 @@ export function CompareSummary({ country1, country2, onOpenDrawer }: CompareSumm
               <div className="grid grid-cols-2 gap-2 text-center pt-1">
                 {/* Country 1 Value */}
                 <div
-                  onClick={() => onOpenDrawer?.(country1.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenDrawer?.(country1.id);
+                  }}
                   className={cn(
                     "p-2.5 rounded-xl border transition-all cursor-pointer hover:scale-[1.02]",
                     winner === "c1"
                       ? "bg-primary/10 border-primary/40 ring-1 ring-primary/30"
                       : "bg-card/60 border-border/40"
                   )}
+                  title={`View ${country1.name} Profile`}
                 >
                   <div className="text-[11px] font-semibold text-muted-foreground flex items-center justify-center gap-1">
                     <span>{country1.flag}</span>
@@ -110,13 +119,17 @@ export function CompareSummary({ country1, country2, onOpenDrawer }: CompareSumm
 
                 {/* Country 2 Value */}
                 <div
-                  onClick={() => onOpenDrawer?.(country2.id)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onOpenDrawer?.(country2.id);
+                  }}
                   className={cn(
                     "p-2.5 rounded-xl border transition-all cursor-pointer hover:scale-[1.02]",
                     winner === "c2"
                       ? "bg-indigo-500/10 border-indigo-500/40 ring-1 ring-indigo-500/30"
                       : "bg-card/60 border-border/40"
                   )}
+                  title={`View ${country2.name} Profile`}
                 >
                   <div className="text-[11px] font-semibold text-muted-foreground flex items-center justify-center gap-1">
                     <span>{country2.flag}</span>

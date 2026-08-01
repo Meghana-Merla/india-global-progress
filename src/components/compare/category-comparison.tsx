@@ -9,9 +9,10 @@ import { cn } from "@/lib/utils";
 export interface CategoryComparisonProps {
   country1: CountryData;
   country2: CountryData;
+  onSelectCategoryForAI?: (name: string, id: string) => void;
 }
 
-export function CategoryComparison({ country1, country2 }: CategoryComparisonProps) {
+export function CategoryComparison({ country1, country2, onSelectCategoryForAI }: CategoryComparisonProps) {
   const categoryList = [
     { id: "economy", name: "Economy" },
     { id: "society", name: "Society" },
@@ -34,7 +35,7 @@ export function CategoryComparison({ country1, country2 }: CategoryComparisonPro
             10-Pillar Detailed Category Breakdown
           </h2>
           <p className="text-xs text-muted-foreground">
-            Granular comparison of index scores, global rankings, and score differentials
+            Granular comparison of index scores, global rankings, and score differentials (Click any section for AI Analysis)
           </p>
         </div>
       </div>
@@ -55,8 +56,10 @@ export function CategoryComparison({ country1, country2 }: CategoryComparisonPro
               initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.04 }}
-              className="glass-card-hover p-4 sm:p-5 rounded-2xl border border-border/50 space-y-4"
+              onClick={() => onSelectCategoryForAI?.(cat.name, cat.id)}
+              className="glass-card-hover p-4 sm:p-5 rounded-2xl border border-border/50 space-y-4 cursor-pointer group relative overflow-hidden"
             >
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-primary opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
               {/* Category Title & Lead Difference Badge */}
               <div className="flex items-center justify-between border-b border-border/30 pb-3">
                 <div className="font-bold text-base text-foreground">

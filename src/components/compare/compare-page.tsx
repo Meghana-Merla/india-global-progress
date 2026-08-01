@@ -7,6 +7,7 @@ import { CompareSummary } from "./compare-summary";
 import { CompareRadarChart } from "./compare-radar-chart";
 import { CategoryComparison } from "./category-comparison";
 import { AICompareSummary } from "./ai-compare-summary";
+import { CompareAIInsightDrawer } from "./compare-ai-insight-drawer";
 import { CountrySideDrawer } from "@/components/maps/country-side-drawer";
 import { useYear } from "@/providers";
 import { getCompareData, getWorldMapData, MapCountryData } from "@/data/mock";
@@ -21,6 +22,24 @@ export function ComparePage() {
   const [country1Id, setCountry1Id] = useState("IND");
   const [country2Id, setCountry2Id] = useState("USA");
   const [selectedDrawerCountry, setSelectedDrawerCountry] = useState<MapCountryData | null>(null);
+
+  // AI Insight Drawer state
+  const [aiInsightState, setAiInsightState] = useState<{
+    isOpen: boolean;
+    title: string;
+    key?: string;
+  }>({
+    isOpen: false,
+    title: "",
+  });
+
+  const handleOpenAIInsight = (title: string, key?: string) => {
+    setAiInsightState({
+      isOpen: true,
+      title,
+      key,
+    });
+  };
 
   const currentCompareData = getCompareData(selectedYear);
   const worldMapCountries = getWorldMapData(selectedYear);
@@ -88,18 +107,33 @@ export function ComparePage() {
         country1={country1}
         country2={country2}
         onOpenDrawer={handleOpenDrawerById}
+        onSelectMetricForAI={handleOpenAIInsight}
       />
 
       {/* 4. Recharts 10-Pillar Radar Chart */}
       <CompareRadarChart country1={country1} country2={country2} />
 
       {/* 5. 10 Detailed Category Comparisons */}
-      <CategoryComparison country1={country1} country2={country2} />
+      <CategoryComparison
+        country1={country1}
+        country2={country2}
+        onSelectCategoryForAI={(name, id) => handleOpenAIInsight(name, id)}
+      />
 
       {/* 6. Country Side Drawer */}
       <CountrySideDrawer
         country={selectedDrawerCountry}
         onClose={() => setSelectedDrawerCountry(null)}
+      />
+
+      {/* 7. AI Insight Drawer for Compare Cards & Sections */}
+      <CompareAIInsightDrawer
+        isOpen={aiInsightState.isOpen}
+        onClose={() => setAiInsightState((prev) => ({ ...prev, isOpen: false }))}
+        title={aiInsightState.title}
+        categoryOrMetricKey={aiInsightState.key}
+        country1={country1}
+        country2={country2}
       />
     </div>
   );

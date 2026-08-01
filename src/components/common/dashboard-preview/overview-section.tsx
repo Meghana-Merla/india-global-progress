@@ -89,7 +89,7 @@ export function OverviewSection() {
         description="A quick overview of India's current global performance across major international indicators."
         action={
           <Link
-            href="#dashboard"
+            href="/dashboard"
             className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-secondary hover:bg-primary/10 hover:text-primary border border-border/60 text-sm font-semibold transition-all duration-300 group"
           >
             <span>View Full Dashboard</span>

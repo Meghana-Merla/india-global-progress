@@ -53,7 +53,7 @@ export function SourceCard({ source, className }: SourceCardProps) {
           </div>
 
           <a
-            href={source.url || "#"}
+            href={source.url || "/sources"}
             target="_blank"
             rel="noopener noreferrer"
             className="p-1.5 rounded-lg text-muted-foreground hover:text-primary hover:bg-secondary transition-colors flex-shrink-0"

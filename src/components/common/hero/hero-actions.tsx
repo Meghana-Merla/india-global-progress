@@ -14,9 +14,9 @@ export interface HeroActionsProps {
 
 export function HeroActions({
   primaryText = "Explore Dashboard",
-  primaryHref = "#dashboard",
+  primaryHref = "/dashboard",
   secondaryText = "Compare Countries",
-  secondaryHref = "#compare",
+  secondaryHref = "/compare",
 }: HeroActionsProps) {
   return (
     <motion.div

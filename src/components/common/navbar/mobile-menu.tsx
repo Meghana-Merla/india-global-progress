@@ -53,7 +53,7 @@ export function MobileMenu({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm xl:hidden"
+            className="fixed inset-0 z-50 bg-black/60 backdrop-blur-sm lg:hidden"
           />
 
           {/* Slide-in Drawer */}
@@ -62,7 +62,7 @@ export function MobileMenu({
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", damping: 25, stiffness: 200 }}
-            className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-[320px] sm:max-w-sm bg-background/95 backdrop-blur-xl border-l border-border/50 shadow-2xl p-5 sm:p-6 flex flex-col justify-between overflow-y-auto xl:hidden"
+            className="fixed top-0 right-0 bottom-0 z-50 w-full max-w-[320px] sm:max-w-sm bg-background/95 backdrop-blur-xl border-l border-border/50 shadow-2xl p-5 sm:p-6 flex flex-col justify-between overflow-y-auto lg:hidden"
           >
             {/* Drawer Header */}
             <div>

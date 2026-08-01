@@ -60,7 +60,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
       </div>
 
       {/* Center Navigation: Desktop Nav Pills */}
-      <div className="hidden xl:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner">
+      <div className="hidden lg:flex items-center gap-1 bg-secondary/50 p-1.5 rounded-full border border-border/40 backdrop-blur-sm shadow-inner max-w-full overflow-x-auto scrollbar-none">
         {items.map((item) => {
           const isActive =
             pathname === item.href ||
@@ -71,7 +71,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
               key={item.title}
               href={item.href}
               className={cn(
-                "relative px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-200 flex items-center gap-1 select-none",
+                "relative px-2.5 py-1 text-xs font-medium rounded-full transition-all duration-200 flex items-center gap-1 select-none shrink-0",
                 isActive
                   ? "text-primary font-semibold"
                   : "text-muted-foreground hover:text-foreground hover:bg-background/40"
@@ -142,7 +142,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
         {/* Mobile Hamburger Toggle Button */}
         <button
           onClick={() => setMobileOpen((prev) => !prev)}
-          className="xl:hidden p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none active:scale-95 cursor-pointer"
+          className="lg:hidden p-2.5 rounded-full text-muted-foreground hover:text-foreground hover:bg-muted/60 transition-colors focus:outline-none active:scale-95 cursor-pointer"
           aria-label="Open mobile menu"
           title="Open mobile menu"
         >

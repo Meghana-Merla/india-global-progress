@@ -4,7 +4,7 @@ import React, { useEffect } from "react";
 import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Search, Sun, Moon } from "lucide-react";
-import { NavItem } from "./nav-links";
+import { NavItem, navigationItems } from "./nav-links";
 import { Logo } from "./logo";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +28,7 @@ const GithubIcon = (props: React.SVGProps<SVGSVGElement>) => (
 export interface MobileMenuProps {
   isOpen: boolean;
   onClose: () => void;
-  items: NavItem[];
+  items?: NavItem[];
   activePathname: string;
   theme?: string;
   onToggleTheme?: () => void;
@@ -37,11 +37,13 @@ export interface MobileMenuProps {
 export function MobileMenu({
   isOpen,
   onClose,
-  items,
+  items = navigationItems,
   activePathname,
   theme,
   onToggleTheme,
 }: MobileMenuProps) {
+  const navItemsList = items && items.length > 0 ? items : navigationItems;
+
   // Prevent background scrolling while open & handle ESC key
   useEffect(() => {
     if (isOpen) {
@@ -72,7 +74,7 @@ export function MobileMenu({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.2 }}
             onClick={onClose}
-            className="fixed inset-0 z-50 bg-black/65 backdrop-blur-sm lg:hidden"
+            className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm lg:hidden"
           />
 
           {/* Left Slide-in Sidebar */}
@@ -81,15 +83,15 @@ export function MobileMenu({
             animate={{ x: 0 }}
             exit={{ x: "-100%" }}
             transition={{ type: "spring", damping: 28, stiffness: 220 }}
-            className="fixed top-0 left-0 bottom-0 z-50 w-full max-w-[280px] sm:max-w-xs bg-background/95 backdrop-blur-2xl border-r border-border shadow-2xl p-5 flex flex-col justify-between overflow-y-auto lg:hidden"
+            className="fixed top-0 left-0 bottom-0 z-50 w-full max-w-[280px] sm:max-w-xs bg-background backdrop-blur-2xl border-r border-border shadow-2xl p-5 flex flex-col justify-between overflow-y-auto lg:hidden"
           >
-            {/* Sidebar Header */}
+            {/* Sidebar Header & Nav */}
             <div>
-              <div className="flex items-center justify-between pb-4 border-b border-border/60">
+              <div className="flex items-center justify-between pb-4 border-b border-border">
                 <Logo onClick={onClose} />
                 <button
                   onClick={onClose}
-                  className="p-2 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
+                  className="p-2 rounded-full hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors cursor-pointer"
                   aria-label="Close sidebar"
                   title="Close sidebar"
                 >
@@ -97,9 +99,9 @@ export function MobileMenu({
                 </button>
               </div>
 
-              {/* Navigation Links */}
+              {/* Navigation Links List */}
               <nav className="mt-4 flex flex-col gap-1">
-                {items.map((item) => {
+                {navItemsList.map((item) => {
                   const Icon = item.icon;
                   const isActive =
                     activePathname === item.href ||
@@ -114,7 +116,7 @@ export function MobileMenu({
                         "flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs sm:text-sm font-medium transition-all duration-200 select-none",
                         isActive
                           ? "bg-primary/10 text-primary font-bold border-l-2 border-primary shadow-xs"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                          : "text-muted-foreground hover:text-foreground hover:bg-secondary"
                       )}
                     >
                       <div className="flex items-center gap-3">

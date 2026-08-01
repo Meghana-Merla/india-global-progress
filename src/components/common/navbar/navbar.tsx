@@ -62,7 +62,7 @@ export function Navbar({ items = navigationItems, className }: NavbarProps) {
   return (
     <nav
       className={cn(
-        "w-full h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto gap-4 border-b border-border bg-background/80 backdrop-blur-md sticky top-0 z-40",
+        "w-full h-16 flex items-center justify-between px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto gap-4",
         className
       )}
     >

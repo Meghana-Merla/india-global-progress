@@ -33,10 +33,10 @@ export function Logo({ className, onClick }: LogoProps) {
 
       {/* Typography */}
       <div className="flex flex-col justify-center">
-        <span className="font-semibold text-sm md:text-base tracking-tight leading-none text-slate-100 group-hover:text-purple-400 transition-colors">
-          IndiaLens <span className="text-purple-500 font-bold">AI</span>
+        <span className="font-semibold text-sm md:text-base tracking-tight leading-none text-foreground group-hover:text-primary transition-colors">
+          IndiaLens <span className="text-primary font-bold">AI</span>
         </span>
-        <span className="text-[10px] font-medium text-slate-400 tracking-wider leading-tight mt-0.5">
+        <span className="text-[10px] font-medium text-muted-foreground tracking-wider leading-tight mt-0.5">
           Global Progress Platform
         </span>
       </div>
